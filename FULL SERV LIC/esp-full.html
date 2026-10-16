@@ -1288,6 +1288,7 @@ function renderCalcSidebar(){
 }
 function attachCalcEvents(){
   const s = document.getElementById('calc-srch'); if(s) s.oninput = e => { state.calcSearch = e.target.value; refreshCalcOps(); };
+  bindCalcOpsEvents();
   bindCalcEvents();
 }
 function refreshCalcOps(){ const box = document.getElementById('calcOpsBox'); if(box){ box.innerHTML = renderCalcOps(); bindCalcOpsEvents(); } }
