@@ -1131,21 +1131,19 @@ function showApp(){
     if (loginScreen) loginScreen.style.display = 'none';
     if (app) {
       app.classList.remove('hidden');
-      app.style.removeProperty('display'); // Убираем возможный display: none
-      app.style.display = 'grid'; 
-      app.style.height = '100dvh'; // Жестко задаем высоту для Safari
+      app.style.display = 'grid';
     }
     
     if (typeof renderUserBadge === 'function') renderUserBadge();
     if (typeof renderNav === 'function') renderNav();
     if (typeof renderChat === 'function') renderChat();
     
-    // Пересчет высоты на случай бага Safari
+    // Пересчет высоты для iOS Safari
     document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
     
   } catch(e) {
-    alert('Ошибка при отрисовке интерфейса: ' + e.message);
     console.error('[ESP] Ошибка в showApp:', e);
+    alert('Ошибка при входе: ' + e.message);
   }
   
   try {
@@ -1156,16 +1154,6 @@ function showApp(){
       Storage.remove('switched_from'); 
     }
   } catch(e) {}
-}
-    
-    renderUserBadge();
-    renderNav();
-    renderChat();
-  } catch(e) {
-    alert('Ошибка при входе: ' + e.message);
-    console.error(e);
-  }
-}serBadge(); renderNav(); renderChat();
 }
 function doLogout(){ if(!confirm('Выйти из системы?')) return; Auth.logout(); showLogin(); }
 function renderUserBadge(){
