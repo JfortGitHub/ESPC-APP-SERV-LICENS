@@ -1131,10 +1131,32 @@ function showApp(){
     if (loginScreen) loginScreen.style.display = 'none';
     if (app) {
       app.classList.remove('hidden');
-      app.style.removeProperty('display'); // Убираем возможный inline display: none
+      app.style.removeProperty('display'); // Убираем возможный display: none
       app.style.display = 'grid'; 
-      app.style.height = '100vh';
+      app.style.height = '100dvh'; // Жестко задаем высоту для Safari
     }
+    
+    if (typeof renderUserBadge === 'function') renderUserBadge();
+    if (typeof renderNav === 'function') renderNav();
+    if (typeof renderChat === 'function') renderChat();
+    
+    // Пересчет высоты на случай бага Safari
+    document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
+    
+  } catch(e) {
+    alert('Ошибка при отрисовке интерфейса: ' + e.message);
+    console.error('[ESP] Ошибка в showApp:', e);
+  }
+  
+  try {
+    const lv = Storage.get('last_version', null);
+    const sf = Storage.get('switched_from', null);
+    if(lv === 'full' && sf === 'lite'){ 
+      if (typeof showToast === 'function') showToast('Вы вошли в расширенную версию', 'ok', 4000); 
+      Storage.remove('switched_from'); 
+    }
+  } catch(e) {}
+}
     
     renderUserBadge();
     renderNav();
