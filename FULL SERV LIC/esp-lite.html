@@ -1301,14 +1301,68 @@ function tabAbout(){
 function tabSettings(){
   const s = AUTH.session;
   const html = `
-    <div class="bubble-title">👤 Настройки</div>
-    <div class="form-sec-title">💾 Резервное копирование</div>
+    <div class="bubble-title">👤 Настройки пользователя</div>
+    <div class="bubble-sub">Управление учётной записью и данными</div>
+
+    <div class="form-sec-title">🪪 Профиль</div>
+    <div class="tile">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <div class="user-avatar" style="width:48px;height:48px;font-size:22px">${(s?.name||'?').charAt(0).toUpperCase()}</div>
+        <div>
+          <div style="color:#fff;font-weight:700;font-size:15px">${s?.name||'—'}</div>
+          <div style="color:var(--muted);font-size:12px">Логин: <code>${s?.login||'—'}</code></div>
+        </div>
+      </div>
+      <span class="badge-role ${s?.role||'user'}">${ROLE_NAMES[s?.role||'user']}</span>
+    </div>
+
+    <div class="form-sec-title" style="margin-top:16px">🔑 Смена пароля</div>
+    <form id="pwdForm">
+      <div class="form-group">
+        <label class="form-lbl">Текущий пароль</label>
+        <input class="form-inp" type="password" name="oldPwd" required autocomplete="current-password">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-lbl">Новый пароль (мин. 6 символов)</label>
+          <input class="form-inp" type="password" name="newPwd" minlength="6" required autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label class="form-lbl">Повторите пароль</label>
+          <input class="form-inp" type="password" name="newPwd2" minlength="6" required autocomplete="new-password">
+        </div>
+      </div>
+      <div id="pwdMsg"></div>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px">
+        <button type="submit" class="btn btn-primary">🔐 Сменить пароль</button>
+      </div>
+    </form>
+
+    <div class="form-sec-title" style="margin-top:20px">💾 Резервное копирование</div>
     <div class="grid2">
       <div class="tile"><button class="btn btn-success btn-xs" id="expAll">📥 Скачать JSON</button></div>
       <div class="tile"><input type="file" id="impFile" accept=".json" style="display:none"><button class="btn btn-ghost btn-xs" id="impBtn">📤 Загрузить JSON</button></div>
     </div>
   `;
   appendMsg(html).then(()=>{
+    // Обработчик смены пароля
+    document.getElementById('pwdForm').onsubmit = async e=>{
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const oldP = fd.get('oldPwd'), newP = fd.get('newPwd'), newP2 = fd.get('newPwd2');
+      const msg = document.getElementById('pwdMsg');
+      const u = AUTH.users.find(x=>x.login === s.login);
+      if(!u){ msg.innerHTML = '<div class="warn-banner err">✕ Пользователь не найден</div>'; return; }
+      const ok = await verifyPwd(oldP, u.password);
+      if(!ok){ msg.innerHTML = '<div class="warn-banner err">✕ Текущий пароль неверен</div>'; return; }
+      if(newP !== newP2){ msg.innerHTML = '<div class="warn-banner err">✕ Пароли не совпадают</div>'; return; }
+      if(newP.length < 6){ msg.innerHTML = '<div class="warn-banner err">✕ Минимум 6 символов</div>'; return; }
+      u.password = await hashPwd(newP); saveUsers();
+      msg.innerHTML = '<div class="warn-banner ok">✓ Пароль успешно изменён</div>';
+      e.target.reset();
+    };
+    
+    // Обработчики бэкапа
     document.getElementById('expAll').onclick = ()=>{
       const data = {_meta:{app:'ESP Lite v4.9', date:new Date().toISOString()}, custom: state.custom, customEquip: state.customEquip, cards: state.cards};
       downloadFile(`esp_backup_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(data, null, 2), 'application/json');
@@ -1335,21 +1389,30 @@ function tabSettings(){
 
 function tabUsers(){
   if(AUTH.session?.role !== 'admin'){ appendMsg('<div class="warn-banner err">✕ Доступ только для администратора</div>'); return; }
+  
+  const rawUsers = AUTH.users.map(u => {
+    return { ...u, isHashed: isHashed(u.password) };
+  });
+
   const html = `
     <div class="bubble-title">👥 Пользователи</div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px">
-      ${AUTH.users.map(u=>`
+      ${rawUsers.map(u=>`
         <div class="tile">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
             <div style="flex:1;min-width:180px">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
                 <span style="font-family:monospace;font-size:12px;color:#93c5fd;font-weight:600">${u.login}</span>
                 ${u.login===AUTH.session.login?'<span class="badge-mini">вы</span>':''}
+                ${u.isHashed ? '<span class="badge-mini" style="color:#86efac;border:1px solid rgba(34,197,94,.4);background:rgba(34,197,94,.1)">🔒 хеш</span>' : '<span class="badge-mini" style="color:#fca5a5;border:1px solid rgba(220,38,38,.4);background:rgba(220,38,38,.1)">⚠ plaintext</span>'}
               </div>
               <div style="color:#fff;font-weight:600;font-size:13.5px">${u.name}</div>
               <div style="margin-top:6px"><span class="badge-role ${u.role}">${ROLE_NAMES[u.role]||u.role}</span></div>
             </div>
-            ${u.login!==AUTH.session.login?`<button class="btn btn-danger btn-xs" data-del-user="${u.login}">🗑 Удалить</button>`:''}
+            <div style="display:flex;gap:6px">
+              ${u.login!==AUTH.session.login?`<button class="btn btn-ghost btn-xs" data-reset-pwd="${u.login}">🔑 Сбросить пароль</button>`:''}
+              ${u.login!==AUTH.session.login?`<button class="btn btn-danger btn-xs" data-del-user="${u.login}">🗑 Удалить</button>`:''}
+            </div>
           </div>
         </div>
       `).join('')}
@@ -1360,7 +1423,43 @@ function tabUsers(){
       const login = b.dataset.delUser;
       if(confirm(`Удалить "${login}"?`)){ AUTH.users = AUTH.users.filter(u=>u.login !== login); saveUsers(); renderChat(); }
     });
+    
+    document.querySelectorAll('[data-reset-pwd]').forEach(b=>b.onclick=()=>{
+      showAdminResetPasswordModal(b.dataset.resetPwd);
+    });
   });
+}
+
+function showAdminResetPasswordModal(login){
+  const m = document.createElement('div');
+  m.className = 'modal-ov';
+  m.innerHTML = '<div class="modal" style="max-width:480px">' +
+    '<div class="modal-head"><div class="modal-title">🔑 Сброс пароля</div><button class="modal-close" type="button" data-close>×</button></div>' +
+    '<div class="modal-body">' +
+    '<div class="warn-banner info">ℹ️ Вы меняете пароль для пользователя <b>' + Utils.escapeHtml(login) + '</b>.</div>' +
+    '<div class="form-group"><label class="form-lbl">Новый пароль (мин. 6 символов) *</label><input class="form-inp" type="password" id="admin-reset-pwd" minlength="6" required></div>' +
+    '<div class="form-group"><label class="form-lbl">Повторите пароль *</label><input class="form-inp" type="password" id="admin-reset-pwd2" minlength="6" required></div>' +
+    '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px"><button class="btn btn-ghost" type="button" data-close>Отмена</button><button class="btn btn-orange" type="button" id="admin-reset-save">💾 Сменить пароль</button></div>' +
+    '</div></div>';
+  document.body.appendChild(m);
+  
+  m.querySelectorAll('[data-close]').forEach(b => b.onclick = () => m.remove());
+  
+  document.getElementById('admin-reset-save').onclick = async () => {
+    const p1 = document.getElementById('admin-reset-pwd').value;
+    const p2 = document.getElementById('admin-reset-pwd2').value;
+    if(p1 !== p2){ alert('Пароли не совпадают'); return; }
+    if(p1.length < 6){ alert('Минимум 6 символов'); return; }
+    
+    const u = AUTH.users.find(x=>x.login === login);
+    if(!u){ alert('Пользователь не найден'); return; }
+    
+    u.password = await hashPwd(p1);
+    saveUsers();
+    alert('Пароль для "' + login + '" успешно изменён.');
+    m.remove();
+    renderChat();
+  };
 }
 
 function showCreateCardModal(){
