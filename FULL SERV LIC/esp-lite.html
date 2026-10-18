@@ -2,13 +2,15 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Нормативы ЭСП — Ограниченная версия</title>
-<!--
-  ESP Norms · Lite · © 2026 · LICENSE ESP-PRO-2026-0001
-  Proprietary software. Unauthorized copying, distribution or modification is prohibited.
-  https://github.com/JfortGitHub/ESPC-APP-SERV-LICENS
--->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Нормативы ЭСП — Lite v4.9</title>
+<meta name="author" content="ЭСПЦ">
+<meta name="copyright" content="© 2024–2026 ЭСПЦ. Все права защищены.">
+<meta name="license" content="ESP-PRO-2026-0001">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#111827">
 <style>
 :root{
   --bg:#111827;--panel:#1f2937;--panel2:#374151;
@@ -17,26 +19,28 @@
   --accent:#2563eb;--accent-h:#3b82f6;
   --green:#16a34a;--red:#dc2626;--yellow:#eab308;--purple:#a855f7;--cyan:#06b6d4;--orange:#f97316;
   --vh:1vh;
+  --sat:0px;--sab:0px;
 }
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:calc(var(--vh,1vh) * 100);overflow:hidden}
 body{
   font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Inter',sans-serif;
   background:#111827;color:var(--text);
-  padding-top:env(safe-area-inset-top);
-  padding-bottom:env(safe-area-inset-bottom);
-  padding-left:env(safe-area-inset-left);
-  padding-right:env(safe-area-inset-right);
+  padding-top:var(--sat);padding-bottom:var(--sab);
+  -webkit-text-size-adjust:100%;
 }
+button,.btn,.nav-item{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,select,textarea{-webkit-appearance:none;appearance:none}
 
-/* ═══ LOGIN SCREEN ═══ */
+/* ═══ LOGIN ═══ */
 .login-screen{
   position:fixed;inset:0;z-index:2000;
   background:radial-gradient(ellipse at 30% 20%,rgba(37,99,235,.18),transparent 55%),
              radial-gradient(ellipse at 70% 80%,rgba(168,85,247,.14),transparent 55%),
              #111827;
   display:flex;align-items:center;justify-content:center;padding:20px;
-  animation:fadeIn .3s;
+  padding-top:calc(20px + var(--sat));padding-bottom:calc(20px + var(--sab));
+  animation:fadeIn .3s;overflow-y:auto;-webkit-overflow-scrolling:touch;
 }
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .login-box{
@@ -64,12 +68,12 @@ body{
 }
 .login-field input:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15)}
 .login-btn{
-  width:100%;padding:12px;border-radius:10px;border:none;cursor:pointer;
+  width:100%;padding:13px;border-radius:10px;border:none;cursor:pointer;
   background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;
-  font-size:14px;font-weight:700;font-family:inherit;margin-top:8px;
+  font-size:15px;font-weight:700;font-family:inherit;margin-top:8px;
   transition:all .2s;
 }
-.login-btn:hover{background:linear-gradient(135deg,#1d4ed8,#4338ca);transform:translateY(-1px);box-shadow:0 8px 22px rgba(37,99,235,.45)}
+.login-btn:active{transform:scale(.98)}
 .login-error{
   background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.4);
   color:#fca5a5;padding:10px 14px;border-radius:10px;font-size:12.5px;
@@ -81,19 +85,18 @@ body{
   margin-top:20px;padding-top:18px;border-top:1px solid var(--border);
   font-size:11.5px;color:var(--dim);text-align:center;line-height:1.7;
 }
-.login-hint b{color:#93c5fd;font-family:monospace;font-size:12px}
 .login-accounts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px}
 .login-account{
   background:#111827;border:1px solid var(--border);border-radius:8px;
   padding:8px 6px;text-align:center;cursor:pointer;transition:all .15s;
 }
-.login-account:hover{border-color:var(--accent-h);background:#1a2233}
+.login-account:active{border-color:var(--accent-h);background:#1a2233}
 .login-account .role{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
 .login-account .login-name{font-family:monospace;font-size:11.5px;color:#93c5fd;margin-top:2px}
 
 /* ═══ APP ═══ */
 .app{display:grid;grid-template-columns:290px 1fr;height:calc(var(--vh,1vh) * 100);overflow:hidden}
-.app.hidden{display:none}
+.app.hidden{display:none !important}
 .sidebar{background:#1f2937;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .brand{padding:20px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#1e3a8a,#312e81,#581c87)}
 .brand-icon{width:44px;height:44px;border-radius:12px;flex-shrink:0;background:#2563eb;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;box-shadow:0 6px 18px rgba(37,99,235,.4)}
@@ -104,22 +107,18 @@ body{
 .nav-scroll::-webkit-scrollbar-thumb{background:#4b5563;border-radius:3px}
 .nav-section{margin-bottom:16px}
 .nav-section-title{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1.2px;padding:6px 10px;font-weight:600}
-.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;cursor:pointer;color:#cbd5e1;font-size:13.5px;font-weight:500;transition:all .18s;margin-bottom:2px;border:1px solid transparent;-webkit-tap-highlight-color:rgba(255,255,255,0.05)}
-.nav-item:hover{background:#334155;color:#fff}
+.nav-item{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:10px;cursor:pointer;color:#cbd5e1;font-size:13.5px;font-weight:500;transition:all .18s;margin-bottom:2px;border:1px solid transparent}
+.nav-item:active{background:#334155;color:#fff}
 .nav-item.active{background:#2563eb;color:#fff;box-shadow:0 4px 12px rgba(37,99,235,.35)}
 .nav-item .ico{font-size:16px;width:20px;text-align:center;flex-shrink:0}
 .nav-item .badge-n{margin-left:auto;background:rgba(37,99,235,.25);color:#93c5fd;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:700}
 .nav-item.active .badge-n{background:rgba(255,255,255,.2);color:#fff}
 .nav-item.admin-only{opacity:.5;pointer-events:none}
-.sidebar-footer{padding:12px 14px;border-top:1px solid var(--border);font-size:10.5px;color:var(--dim);text-align:center}
-#esp-wm{
-  display:block;font-size:9.5px;opacity:.5;margin-top:6px;
-  font-family:ui-monospace,Menlo,Consolas,monospace;
-  letter-spacing:.5px;user-select:none;word-break:break-all;
-}
+.sidebar-footer{padding:12px 14px;border-top:1px solid var(--border);font-size:10.5px;color:var(--dim);text-align:center;padding-bottom:calc(12px + var(--sab))}
+#esp-wm{display:block;font-size:9.5px;opacity:.5;margin-top:6px;font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:.5px;user-select:none;word-break:break-all}
 
-.main{display:flex;flex-direction:column;overflow:hidden;position:relative;background:#111827}
-.topbar{padding:12px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:#1f2937;z-index:10;flex-wrap:wrap;gap:10px}
+.main{display:flex;flex-direction:column;overflow:hidden;position:relative;background:#111827;height:100%}
+.topbar{padding:12px 24px;padding-top:calc(12px + var(--sat));border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:#1f2937;z-index:10;flex-wrap:wrap;gap:10px}
 .topbar-title{display:flex;align-items:center;gap:10px;color:#fff;font-weight:600;font-size:15px;flex:1;min-width:200px}
 .topbar-title .dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 10px #22c55e;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
@@ -129,36 +128,30 @@ body{
 .user-badge .uname{color:#fff;font-weight:600}
 .user-badge .urole{color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.4px}
 
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:9px;border:1px solid transparent;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;background:#374151;color:#cbd5e1;font-family:inherit;white-space:nowrap}
-.btn:hover{background:#4b5563;color:#fff;transform:translateY(-1px)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:9px;border:1px solid transparent;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;background:#374151;color:#cbd5e1;font-family:inherit;white-space:nowrap;min-height:36px}
+.btn:active{background:#4b5563;color:#fff;transform:scale(.97)}
 .btn-primary{background:#2563eb;color:#fff}
-.btn-primary:hover{background:#1d4ed8;box-shadow:0 6px 18px rgba(37,99,235,.4)}
 .btn-success{background:#16a34a;color:#fff}
-.btn-success:hover{background:#15803d;box-shadow:0 6px 18px rgba(22,163,74,.4)}
 .btn-ghost{background:transparent;border-color:var(--border);color:var(--muted)}
-.btn-ghost:hover{background:#374151;color:#fff}
 .btn-danger{background:rgba(220,38,38,.15);color:#fca5a5;border-color:rgba(220,38,38,.35)}
-.btn-danger:hover{background:rgba(220,38,38,.3);color:#fff}
-.btn-xs{padding:5px 10px;font-size:11.5px;border-radius:7px}
-.btn-ico{padding:8px;width:36px;justify-content:center}
-.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-xs{padding:6px 10px;font-size:11.5px;border-radius:7px;min-height:30px}
+.btn-ico{padding:8px;width:38px;min-height:38px;justify-content:center}
 
-.chat{flex:1;overflow-y:auto;padding:24px 24px 40px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.chat{flex:1;overflow-y:auto;padding:24px 24px 40px;padding-bottom:calc(40px + var(--sab));display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
 .chat::-webkit-scrollbar{width:8px}
 .chat::-webkit-scrollbar-thumb{background:#4b5563;border-radius:4px}
-.msg{max-width:100%;display:flex;animation:slideIn .35s cubic-bezier(.16,1,.3,1)}
+.msg{max-width:100%;display:flex;animation:slideIn .35s}
 @keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.bubble{background:#1f2937;border:1px solid var(--border);border-radius:14px;padding:16px 20px;font-size:14px;line-height:1.6;color:var(--text);box-shadow:0 4px 16px rgba(0,0,0,.25);width:100%;max-width:1000px}
+.bubble{background:#1f2937;border:1px solid var(--border);border-radius:14px;padding:16px 20px;font-size:14px;line-height:1.6;color:var(--text);box-shadow:0 4px 16px rgba(0,0,0,.25);width:100%;max-width:1000px;word-wrap:break-word;overflow-wrap:break-word}
 .bubble-title{color:#fff;font-weight:700;font-size:15px;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .bubble-sub{color:var(--muted);font-size:12.5px;margin-bottom:10px}
 .bubble p{margin-bottom:8px}
-.bubble p:last-child{margin-bottom:0}
 .bubble ul{list-style:none;margin:6px 0}
 .bubble li{padding:3px 0;font-size:13.5px;display:flex;gap:8px}
 .bubble li::before{content:'▸';color:#60a5fa;flex-shrink:0}
-.bubble code{font-family:'JetBrains Mono',monospace;background:#111827;padding:2px 6px;border-radius:4px;font-size:12.5px;color:#93c5fd}
+.bubble code{font-family:'JetBrains Mono',monospace;background:#111827;padding:2px 6px;border-radius:4px;font-size:12.5px;color:#93c5fd;word-break:break-all}
 .bubble .hl{color:#93c5fd;font-weight:600}
-.tm-code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:rgba(168,85,247,.15);color:#d8b4fe;padding:3px 8px;border-radius:6px;border:1px solid rgba(168,85,247,.3);display:inline-block}
+.tm-code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:rgba(168,85,247,.15);color:#d8b4fe;padding:3px 8px;border-radius:6px;border:1px solid rgba(168,85,247,.3);display:inline-block;word-break:break-all}
 
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .chip{font-size:11.5px;padding:4px 10px;border-radius:20px;font-weight:600;border:1px solid}
@@ -175,7 +168,7 @@ body{
 .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
 @media(max-width:760px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
 .tile{background:#111827;border:1px solid var(--border);border-radius:10px;padding:12px 14px;transition:all .2s}
-.tile:hover{border-color:var(--border-hi);transform:translateY(-1px);box-shadow:0 6px 18px rgba(37,99,235,.15)}
+.tile:active{border-color:var(--border-hi);transform:translateY(-1px)}
 .tile-h{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:6px}
 .tile-v{font-size:22px;font-weight:800;color:#fff}
 .tile-v.blue{color:#60a5fa}.tile-v.green{color:#4ade80}.tile-v.purple{color:#c084fc}
@@ -183,15 +176,14 @@ body{
 .tile-d{font-size:11.5px;color:var(--muted);margin-top:4px}
 
 .norms-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:#111827;border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:10px}
-.search-inp{flex:1;min-width:200px;background:#111827;border:1px solid #4b5563;border-radius:9px;padding:9px 14px;color:#fff;font-size:13.5px;font-family:inherit;transition:border-color .18s}
-.search-inp:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15)}
-.sel{background:#111827;border:1px solid #4b5563;border-radius:8px;padding:8px 12px;color:#cbd5e1;font-size:12.5px;font-family:inherit;cursor:pointer}
-.sel:focus{outline:none;border-color:#3b82f6}
+.search-inp{flex:1;min-width:200px;background:#111827;border:1px solid #4b5563;border-radius:9px;padding:10px 14px;color:#fff;font-size:16px;font-family:inherit}
+.search-inp:focus{outline:none;border-color:#3b82f6}
+.sel{background:#111827;border:1px solid #4b5563;border-radius:8px;padding:9px 12px;color:#cbd5e1;font-size:13px;font-family:inherit;cursor:pointer;min-height:38px}
 .norm-row{background:#111827;border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px;transition:all .2s}
-.norm-row:hover{border-color:var(--border-hi);background:#1a2233;transform:translateX(2px)}
+.norm-row:active{border-color:var(--border-hi);background:#1a2233}
 .norm-row-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
 .norm-row-info{flex:1;min-width:200px}
-.norm-row-code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#93c5fd;font-weight:600}
+.norm-row-code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#93c5fd;font-weight:600;word-break:break-all}
 .norm-row-name{color:#fff;font-size:13.5px;font-weight:600;margin-top:3px;line-height:1.35}
 .norm-row-eq{color:var(--muted);font-size:11.5px;margin-top:3px}
 .norm-row-tm{margin-top:5px}
@@ -208,11 +200,11 @@ body{
 .calc-item:last-child{border-bottom:none}
 .calc-item-name{flex:1;min-width:0;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .calc-item-meta{font-size:11px;color:var(--dim)}
-.qty-btn{width:24px;height:24px;border-radius:6px;background:#374151;color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:700;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.qty-btn:hover{background:#2563eb;transform:scale(1.1)}
-.qty-val{color:#fff;font-weight:700;width:28px;text-align:center;font-size:13.5px}
-.calc-del{background:none;border:none;color:var(--dim);cursor:pointer;padding:4px;font-size:14px;transition:color .15s}
-.calc-del:hover{color:#f87171}
+.qty-btn{width:32px;height:32px;border-radius:7px;background:#374151;color:#fff;border:none;cursor:pointer;font-size:16px;font-weight:700;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.qty-btn:active{background:#2563eb;transform:scale(.92)}
+.qty-val{color:#fff;font-weight:700;width:32px;text-align:center;font-size:14px}
+.calc-del{background:none;border:none;color:var(--dim);cursor:pointer;padding:6px;font-size:16px;transition:color .15s;min-height:32px;min-width:32px}
+.calc-del:active{color:#f87171}
 .calc-summary{background:#111827;padding:14px;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
 .calc-sidebar{background:#111827;border:1px solid var(--border);border-radius:12px;padding:16px;position:sticky;top:10px;height:fit-content}
 
@@ -221,30 +213,30 @@ body{
 .stat-bar-name{color:var(--muted)}
 .stat-bar-v{color:#fff;font-weight:700}
 .stat-bar-track{height:8px;background:#374151;border-radius:4px;overflow:hidden}
-.stat-bar-fill{height:100%;border-radius:4px;transition:width .6s cubic-bezier(.16,1,.3,1)}
+.stat-bar-fill{height:100%;border-radius:4px;transition:width .6s}
 
 .tech-card{background:#111827;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;transition:all .2s}
-.tech-card:hover{border-color:var(--border-hi);transform:translateY(-2px);box-shadow:0 8px 22px rgba(37,99,235,.15)}
+.tech-card:active{border-color:var(--border-hi);transform:translateY(-1px)}
 .tech-card-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px}
 .tech-card-num{font-family:'JetBrains Mono',monospace;color:#93c5fd;font-size:12.5px;font-weight:700}
 .tech-card-title{color:#fff;font-size:15px;font-weight:700;margin-top:4px}
 .tech-card-meta{color:var(--muted);font-size:12px;margin-top:4px}
 
-.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;animation:fadeIn .2s}
-.modal{background:#1f2937;border:1px solid var(--border-hi);border-radius:16px;max-width:820px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.6);animation:slideIn .3s cubic-bezier(.16,1,.3,1)}
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;padding-top:calc(20px + var(--sat));padding-bottom:calc(20px + var(--sab));animation:fadeIn .2s;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal{background:#1f2937;border:1px solid var(--border-hi);border-radius:16px;max-width:820px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.6);-webkit-overflow-scrolling:touch}
 .modal::-webkit-scrollbar{width:8px}
 .modal::-webkit-scrollbar-thumb{background:#4b5563;border-radius:4px}
 .modal-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#1f2937;z-index:5}
 .modal-title{color:#fff;font-size:16px;font-weight:700}
-.modal-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;padding:4px}
-.modal-close:hover{color:#fff}
+.modal-close{background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1;padding:6px;min-height:36px;min-width:36px}
+.modal-close:active{color:#fff}
 .modal-body{padding:20px 22px}
 
 .form-group{margin-bottom:14px}
 .form-lbl{display:block;font-size:11.5px;color:var(--muted);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-.form-inp,.form-sel,.form-ta{width:100%;background:#111827;border:1px solid #4b5563;border-radius:9px;padding:9px 12px;color:#fff;font-size:16px;font-family:inherit;transition:border-color .15s}
-.form-inp:focus,.form-sel:focus,.form-ta:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15)}
-.form-inp.err,.form-sel.err{border-color:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,.15)}
+.form-inp,.form-sel,.form-ta{width:100%;background:#111827;border:1px solid #4b5563;border-radius:9px;padding:10px 12px;color:#fff;font-size:16px;font-family:inherit}
+.form-inp:focus,.form-sel:focus,.form-ta:focus{outline:none;border-color:#3b82f6}
+.form-inp.err,.form-sel.err{border-color:#dc2626}
 .form-inp.ok{border-color:#16a34a}
 .form-inp.tm{font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
 .form-ta{resize:vertical;min-height:70px}
@@ -268,98 +260,173 @@ body{
 .badge-role.engineer{background:rgba(37,99,235,.2);color:#93c5fd;border:1px solid rgba(37,99,235,.4)}
 .badge-role.user{background:rgba(34,197,94,.2);color:#86efac;border:1px solid rgba(34,197,94,.4)}
 .mob-toggle{display:none}
+
+.full-toast{position:fixed;bottom:24px;right:24px;z-index:5000;background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;padding:14px 20px;border-radius:12px;box-shadow:0 12px 32px rgba(37,99,235,.5);font-size:13px;max-width:340px;display:flex;gap:12px;align-items:flex-start;animation:slideIn .4s}
+.full-toast .toast-icon{font-size:22px;flex-shrink:0}
+.full-toast .toast-title{font-weight:700;margin-bottom:4px}
+.full-toast .toast-desc{opacity:.9;font-size:12px;line-height:1.4}
+.full-toast .toast-close{position:absolute;top:6px;right:8px;background:none;border:none;color:rgba(255,255,255,.7);font-size:18px;cursor:pointer;line-height:1;padding:2px}
+
 @media(max-width:900px){
   .app{grid-template-columns:0 1fr}
-  .sidebar{position:fixed;left:0;top:0;bottom:0;width:290px;z-index:200;transform:translateX(-100%);transition:transform .3s}
-  .sidebar.open{transform:translateX(0)}
+  .sidebar{position:fixed;left:0;top:0;bottom:0;width:280px;z-index:200;transform:translateX(-100%);transition:transform .3s;padding-top:var(--sat);padding-bottom:var(--sab)}
+  .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,.6)}
   .mob-toggle{display:inline-flex}
-  .chat{padding:16px}
+  .chat{padding:16px;padding-bottom:calc(24px + var(--sab))}
 }
-
-/* ═══ MOBILE PATCH v1.0 ═══ */
-button,.btn,a{-webkit-tap-highlight-color:rgba(0,0,0,.1)}
-input,select,textarea{font-size:16px}
 @media(max-width:768px){
-  .topbar{padding:10px 14px}
-  .topbar-title{font-size:14px}
-  .content h2{font-size:16px}
-  .btn{padding:9px 12px}
+  .login-box{padding:24px 20px;max-width:100%;border-radius:16px}
+  .login-logo{width:56px;height:56px;font-size:28px}
+  .login-box h2{font-size:19px}
+  .topbar{padding:10px 14px;padding-top:calc(10px + var(--sat));gap:8px}
+  .topbar-title{font-size:13.5px;min-width:0;flex:1}
+  .user-badge{padding:5px 8px 5px 6px;font-size:11px}
+  .user-avatar{width:22px;height:22px;font-size:10px}
+  .btn{padding:8px 11px;font-size:12px;min-height:38px}
+  .btn-xs{padding:6px 10px;font-size:11.5px;min-height:34px}
+  .btn-ico{padding:8px;width:40px;min-height:40px}
+  .chat{padding:12px 10px 24px;padding-bottom:calc(24px + var(--sab))}
+  .bubble{padding:12px 14px;border-radius:11px}
+  .bubble-title{font-size:14px}
+  .grid2,.grid3,.grid4{grid-template-columns:1fr !important}
+  .calc-wrap{grid-template-columns:1fr}
+  .calc-sidebar{position:static}
+  .norms-toolbar{padding:10px;gap:6px}
+  .search-inp{min-width:0;flex:1 1 100%}
+  .sel{font-size:12px;padding:8px 10px;min-height:40px}
+  .norm-row{padding:11px 12px}
+  .norm-row-head{gap:8px}
+  .norm-row-stats{gap:10px;width:100%;justify-content:flex-start}
+  .norm-stat-v{font-size:16px}
+  .norm-row-actions{width:100%;margin-top:4px}
+  .norm-row-actions .btn{width:100%;justify-content:center}
+  .modal{max-width:100%;max-height:95vh;border-radius:12px}
+  .modal-body{padding:14px}
+  .form-row{grid-template-columns:1fr}
+  .full-toast{left:12px;right:12px;bottom:12px;bottom:calc(12px + var(--sab));max-width:none}
+  .tile{padding:10px 12px}
+  .tile-v{font-size:19px}
+  .tech-card{padding:12px}
+  .tech-card-title{font-size:14px}
+  .bubble li{font-size:12.5px}
+  .bubble code{font-size:11.5px}
+  .tm-code{font-size:10.5px}
+  .calc-item{padding:9px 11px}
+  .qty-btn{width:34px;height:34px}
+  .qty-val{width:34px;font-size:15px}
 }
 @media(max-width:480px){
-  .bubble{padding:14px 16px;font-size:13.5px}
-  .chat{padding:12px}
-  h1{font-size:18px}
-  h2{font-size:15px}
-  .sidebar{width:100%;max-width:240px}
-  .nav-item{padding:9px 10px;font-size:12.5px}
-  .card{padding:12px}
-  .login-box{padding:20px}
-  .login-accounts{grid-template-columns:1fr;gap:4px}
+  .login-box{padding:20px 16px;border-radius:14px}
+  .login-accounts{grid-template-columns:1fr 1fr}
+  .chat{padding:10px 8px 20px;padding-bottom:calc(20px + var(--sab))}
+  .bubble{padding:10px 12px}
+  .norm-row-code{font-size:11px}
+  .norm-row-name{font-size:12.5px}
+  .norm-row-eq{font-size:11px}
+  .topbar-title{font-size:12.5px}
+}
+@media(max-width:768px) and (orientation:landscape){
+  .modal{max-height:100vh}
+  .login-box{margin-top:0}
 }
 </style>
 </head>
 <body>
 
-<!-- ═══ ЛОГИН ═══ -->
+<!-- ESP GUARD -->
+<script>
+(function(global){
+  'use strict';
+  const PRODUCT = 'ESP Lite v4.9';
+  const OWNER = 'ЭСПЦ';
+  const LICENSE_ID = 'ESP-PRO-2026-0001';
+  const COPYRIGHT = '© 2024–2026 ЭСПЦ · Все права защищены';
+  const ALLOWED_HOSTS = ['', 'localhost', '127.0.0.1', 'jfortgithub.github.io'];
+  const Guard = {
+    product: PRODUCT, licenseId: LICENSE_ID, watermark: '',
+    checkHost(){
+      const host = location.hostname || '';
+      if(ALLOWED_HOSTS.length === 0) return true;
+      if(host === '' && ALLOWED_HOSTS.includes('')) return true;
+      return ALLOWED_HOSTS.includes(host);
+    },
+    makeWatermark(){
+      const parts = [navigator.userAgent.length, screen.width, screen.height, new Date().getTimezoneOffset()].join('|');
+      let h = 2166136261 >>> 0;
+      for(let i = 0; i < parts.length; i++){ h ^= parts.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+      return 'ESP-WM-' + h.toString(16).toUpperCase().padStart(8, '0');
+    },
+    init(){
+      this.watermark = this.makeWatermark();
+      if(!this.checkHost()){
+        document.body.innerHTML = '<div style="padding:40px;font-family:sans-serif;text-align:center;color:#eee;background:#0f1420;min-height:100vh"><h2>⚠️ Недопустимый домен</h2><p>Хост <code>' + (location.hostname||'file') + '</code> не входит в список разрешённых.</p></div>';
+        throw new Error('ESP GUARD: host not allowed');
+      }
+    }
+  };
+  global.ESP_GUARD = Guard;
+  Guard.init();
+})(window);
+
+// Mobile patch
+(function(global){
+  function setVH(){
+    document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
+  }
+  setVH();
+  window.addEventListener('resize', setVH);
+  window.addEventListener('orientationchange', () => setTimeout(setVH, 200));
+  try{
+    document.documentElement.style.setProperty('--sat', 'env(safe-area-inset-top, 0px)');
+    document.documentElement.style.setProperty('--sab', 'env(safe-area-inset-bottom, 0px)');
+  }catch(e){}
+})(window);
+
+// Safe storage wrapper
+(function(global){
+  const memStore = new Map();
+  global.__ESP_safeLS = {
+    getItem(k){ try{ return localStorage.getItem(k); }catch(e){ return memStore.has(k) ? memStore.get(k) : null; } },
+    setItem(k, v){ try{ localStorage.setItem(k, v); }catch(e){ memStore.set(k, v); } },
+    removeItem(k){ try{ localStorage.removeItem(k); }catch(e){ memStore.delete(k); } }
+  };
+  global.__ESP_safeSS = {
+    getItem(k){ try{ return sessionStorage.getItem(k); }catch(e){ return memStore.has('__s_' + k) ? memStore.get('__s_' + k) : null; } },
+    setItem(k, v){ try{ sessionStorage.setItem(k, v); }catch(e){ memStore.set('__s_' + k, v); } },
+    removeItem(k){ try{ sessionStorage.removeItem(k); }catch(e){ memStore.delete('__s_' + k); } }
+  };
+})(window);
+</script>
+
 <div class="login-screen" id="loginScreen">
   <form class="login-box" id="loginForm" autocomplete="off">
     <div class="login-logo">⚙️</div>
     <h2>Нормативы ЭСП</h2>
-    <div class="sub">Ограниченная версия · <b>Lite</b></div>
+    <div class="sub">Ограниченная версия · <b>Lite v4.9</b></div>
     <div class="login-error" id="loginError">Неверный логин или пароль</div>
-    <div class="login-field">
-      <label>Логин</label>
-      <input name="login" id="loginInput" placeholder="Введите логин" required autocomplete="username">
-    </div>
-    <div class="login-field">
-      <label>Пароль</label>
-      <input name="password" id="passwordInput" type="password" placeholder="Введите пароль" required autocomplete="current-password">
-    </div>
+    <div class="login-field"><label>Логин</label><input name="login" id="loginInput" placeholder="Введите логин" required autocomplete="username"></div>
+    <div class="login-field"><label>Пароль</label><input name="password" id="passwordInput" type="password" placeholder="Введите пароль" required autocomplete="current-password"></div>
     <button type="submit" class="login-btn">🔐 Войти в систему</button>
     <div class="login-hint">
       Демо-доступы (нажмите для подстановки):
       <div class="login-accounts">
-        <div class="login-account" data-login="admin" data-pwd="admin123">
-          <div class="role">Админ</div>
-          <div class="login-name">admin</div>
-        </div>
-        <div class="login-account" data-login="engineer" data-pwd="eng123">
-          <div class="role">Инженер</div>
-          <div class="login-name">engineer</div>
-        </div>
-        <div class="login-account" data-login="user" data-pwd="user123">
-          <div class="role">Польз.</div>
-          <div class="login-name">user</div>
-        </div>
+        <div class="login-account" onclick="document.getElementById('loginInput').value='admin';document.getElementById('passwordInput').value='admin123';document.getElementById('loginError').classList.remove('show');"><div class="role">Админ</div><div class="login-name">admin</div></div>
+        <div class="login-account" onclick="document.getElementById('loginInput').value='engineer';document.getElementById('passwordInput').value='eng123';document.getElementById('loginError').classList.remove('show');"><div class="role">Инженер</div><div class="login-name">engineer</div></div>
+        <div class="login-account" onclick="document.getElementById('loginInput').value='user';document.getElementById('passwordInput').value='user123';document.getElementById('loginError').classList.remove('show');"><div class="role">Польз.</div><div class="login-name">user</div></div>
       </div>
     </div>
   </form>
 </div>
 
-<!-- ═══ ПРИЛОЖЕНИЕ ═══ -->
 <div class="app hidden" id="app">
   <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <div class="brand-icon">⚙️</div>
-      <div class="brand-text">
-        <h1>Нормативы ЭСП</h1>
-        <p>Lite · Трудозатраты · Ремонт</p>
-      </div>
-    </div>
+    <div class="brand"><div class="brand-icon">⚙️</div><div class="brand-text"><h1>Нормативы ЭСП</h1><p>Lite · Трудозатраты · Ремонт</p></div></div>
     <div class="nav-scroll" id="navScroll"></div>
-    <div class="sidebar-footer">
-      ЭСП © 2024–2026 · v3.0 Lite
-      <div id="esp-wm"></div>
-    </div>
+    <div class="sidebar-footer">ЭСП © 2024–2026 · v4.9 Lite<div id="esp-wm"></div></div>
   </aside>
-
   <main class="main">
     <div class="topbar">
-      <div class="topbar-title">
-        <span class="dot"></span>
-        <span id="topbarTitle">Нормативы</span>
-        <span class="badge-version">Lite</span>
-      </div>
+      <div class="topbar-title"><span class="dot"></span><span id="topbarTitle">Нормативы</span><span class="badge-version">Lite</span></div>
       <div class="topbar-actions">
         <button class="btn btn-ico mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
         <div class="user-badge" id="userBadge"></div>
@@ -372,101 +439,6 @@ input,select,textarea{font-size:16px}
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════════════════
-   ESP GUARD v1.0 (Lite) + MOBILE PATCH v1.0
-   Запускается ДО всего остального: проверка домена, fingerprint,
-   водяной знак, --vh, safe scroll, анти-тампер, анти-дебаг.
-   ═══════════════════════════════════════════════════════════════════ */
-(function () {
-  'use strict'
-
-  /* ── FNV ── */
-  const FNV = (str) => {
-    let h = 0x811c9dc5
-    for (let i = 0; i < str.length; i++) {
-      h ^= str.charCodeAt(i)
-      h = (h * 0x01000193) >>> 0
-    }
-    return h >>> 0
-  }
-  const fnvHex = (str) => FNV(str).toString(16).padStart(8, '0')
-
-  /* ── ESP GUARD ── */
-  const LICENSE_ID = 'ESP-PRO-2026-0001'
-  const ALLOWED_HOSTS = ['', 'localhost', '127.0.0.1', 'jfortgithub.github.io']
-
-  const host = (location.hostname || '').toLowerCase()
-  if (ALLOWED_HOSTS.indexOf(host) === -1) {
-    document.body.innerHTML =
-      '<div style="padding:40px;font-family:sans-serif;text-align:center;color:#eee;background:#0f1420;min-height:100vh">' +
-      '<h2>⚠️ Недопустимый домен</h2>' +
-      '<p>Хост <code>' + host + '</code> не входит в список разрешённых.</p>' +
-      '<p style="color:#8896b3">Лицензия: ' + LICENSE_ID + '</p></div>'
-    throw new Error('ESP GUARD: host not allowed')
-  }
-
-  const fp = fnvHex([
-    navigator.userAgent,
-    navigator.language,
-    screen.width + 'x' + screen.height,
-    new Date().getTimezoneOffset()
-  ].join('|')).toUpperCase()
-  const WM = 'ESP-WM-' + fp
-
-  const injectWM = () => {
-    const el = document.getElementById('esp-wm')
-    if (el) el.textContent = WM + ' · ' + LICENSE_ID
-    const el2 = document.getElementById('esp-wm-about')
-    if (el2) el2.textContent = WM
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectWM)
-  } else { injectWM() }
-
-  /* anti-tamper: раз в 90 с */
-  const CORE_SIG = fnvHex('ESP_LITE_CORE_v1')
-  setInterval(() => {
-    if (fnvHex('ESP_LITE_CORE_v1') !== CORE_SIG) {
-      console.warn('ESP GUARD: integrity check failed')
-    }
-  }, 90000)
-
-  /* anti-debug: грубая детекция DevTools */
-  let devOpen = false
-  setInterval(() => {
-    const w = window.outerWidth - window.innerWidth
-    const h = window.outerHeight - window.innerHeight
-    if (w > 160 || h > 160) {
-      if (!devOpen) {
-        devOpen = true
-        console.info('%cESP GUARD', 'color:#e00;font-weight:bold',
-          'Лицензия ' + LICENSE_ID + ' · ' + WM)
-      }
-    } else { devOpen = false }
-  }, 2000)
-
-  /* периодический баннер */
-  setInterval(() => {
-    console.info('%cESP Norms · Lite', 'color:#08f;font-weight:bold',
-      'Лицензия ' + LICENSE_ID + ' · ' + WM)
-  }, 300000)
-
-  /* ── Mobile patch: --vh + safe scroll ── */
-  const setVh = () => {
-    document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px')
-  }
-  setVh()
-  window.addEventListener('resize', setVh)
-  window.addEventListener('orientationchange', () => setTimeout(setVh, 100))
-
-  window.ESP_GUARD = { LICENSE_ID, WM, fingerprint: fp, allowedHosts: ALLOWED_HOSTS }
-
-  console.info('%cESP GUARD v1.0', 'color:#0a0;font-weight:bold', 'loaded · ' + WM)
-})()
-
-/* ============================================================
-   БАЗА НОРМАТИВОВ (112 записей)
-   ============================================================ */
 const N_RAW = [
 ['ups-001','УПС-ЛК-001','Замена ленты конвейера подачи ферросплавов','UPSMiF','mechanical','Ленточный конвейер','КЛС-800',24,4,'4-5 разряд',3,'federal','ФЕРп-2001 т.20','ФЕР',0.93,'СР',26,'Лебёдка,Ключи,Вулканизатор','Блокировка привода,СИЗ','Замена конвейерной ленты.',''],
 ['ups-002','УПС-РЛ-002','Ремонт роликоопор конвейера','UPSMiF','mechanical','Ленточный конвейер','КЛС-800',12,2,'3-4 разряд',2,'gost','ГОСТ Р 56291-2014','ГОСТ',0.85,'ТР',11,'Съёмник,Ключи','Блокировка,СИЗ','Замена изношенных роликоопор.',''],
@@ -599,28 +571,17 @@ const SOURCE_NAMES = {federal:'Федеральные нормативы',gost:'
 const REPAIR_NAMES = {'ТР':'Текущий ремонт','СР':'Средний ремонт','КР':'Капитальный ремонт'};
 const ROLE_NAMES = {admin:'Администратор',engineer:'Инженер',user:'Пользователь'};
 
-/* ============================================================
-   PATCH: ХЕШИРОВАНИЕ ПАРОЛЕЙ
-   ============================================================ */
 const PWD_SALT = 'esp-norm-salt-v1';
-
 async function sha256Hex(data){
   const buf = new TextEncoder().encode(data);
   const h = await crypto.subtle.digest('SHA-256', buf);
   return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-
 function fnvIterHex(data){
   let h = 2166136261 >>> 0;
-  for(let round=0; round<10000; round++){
-    for(let i=0;i<data.length;i++){
-      h ^= data.charCodeAt(i);
-      h = Math.imul(h, 16777619) >>> 0;
-    }
-  }
+  for(let round=0; round<10000; round++){ for(let i=0;i<data.length;i++){ h ^= data.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } }
   return h.toString(16).padStart(8,'0');
 }
-
 async function hashPwd(pwd){
   const data = PWD_SALT + '::' + pwd;
   if(window.crypto && crypto.subtle && crypto.subtle.digest){
@@ -628,7 +589,6 @@ async function hashPwd(pwd){
   }
   return 'fnv:' + fnvIterHex(data);
 }
-
 async function verifyPwd(pwd, storedHash){
   if(!storedHash) return false;
   const data = PWD_SALT + '::' + pwd;
@@ -641,12 +601,8 @@ async function verifyPwd(pwd, storedHash){
   }
   return false;
 }
-
 function isHashed(h){ return typeof h === 'string' && (h.startsWith('sha256:') || h.startsWith('fnv:')); }
 
-/* ============================================================
-   АУТЕНТИФИКАЦИЯ
-   ============================================================ */
 const DEFAULT_USERS = [
   {login:'admin',password:'admin123',name:'Администратор',role:'admin',createdAt:'2026-01-01'},
   {login:'engineer',password:'eng123',name:'Инженер-нормировщик',role:'engineer',createdAt:'2026-01-01'},
@@ -658,10 +614,8 @@ let AUTH = {
   session: null
 };
 if(!localStorage.getItem('esp_users')) localStorage.setItem('esp_users', JSON.stringify(DEFAULT_USERS));
-
 function saveUsers(){localStorage.setItem('esp_users', JSON.stringify(AUTH.users))}
 
-/* PATCH: миграция plaintext → хеши (однократно) */
 async function migratePasswords(){
   let changed = false;
   for(const u of AUTH.users){
@@ -669,10 +623,7 @@ async function migratePasswords(){
     u.password = await hashPwd(u.password);
     changed = true;
   }
-  if(changed){
-    saveUsers();
-    console.log('[ESP] Пароли переведены в хеши (' + AUTH.users.length + ' записей)');
-  }
+  if(changed){ saveUsers(); console.log('[ESP] Пароли переведены в хеши'); }
 }
 
 async function tryLogin(login, password){
@@ -700,11 +651,7 @@ function switchToFull(){
   localStorage.setItem('esp_last_version', 'lite');
   localStorage.setItem('esp_switched_from', 'lite');
   localStorage.setItem('esp_switched_at', new Date().toISOString());
-  try{
-    window.location.href = './esp-full.html';
-  }catch(e){
-    alert('Не удалось открыть esp-full.html\n\nПроверьте, что файл лежит в той же папке, что и esp-lite.html');
-  }
+  try{ window.location.href = './esp-full.html'; }catch(e){ alert('Не удалось открыть esp-full.html'); }
 }
 function showLogin(){
   document.getElementById('loginScreen').style.display='flex';
@@ -714,70 +661,57 @@ function showLogin(){
   setTimeout(()=>document.getElementById('loginInput').focus(),100);
 }
 function showApp(){
-  document.getElementById('loginScreen').style.display='none';
-  document.getElementById('app').classList.remove('hidden');
-  renderUserBadge();
-  renderNav();
-  renderChat();
-  /* подставить водяной знак */
-  const g = window.ESP_GUARD || {};
-  const wm = document.getElementById('esp-wm');
-  if (wm) wm.textContent = (g.WM || '') + ' · ' + (g.LICENSE_ID || '');
+  try {
+    const loginScreen = document.getElementById('loginScreen');
+    const app = document.getElementById('app');
+    if (loginScreen) loginScreen.style.display = 'none';
+    if (app) {
+      app.classList.remove('hidden');
+      app.style.display = 'grid';
+      app.style.height = 'calc(var(--vh,1vh) * 100)';
+    }
+    if (typeof renderUserBadge === 'function') renderUserBadge();
+    if (typeof renderNav === 'function') renderNav();
+    if (typeof renderChat === 'function') renderChat();
+    document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
+    const g = window.ESP_GUARD || {};
+    const wm = document.getElementById('esp-wm');
+    if (wm) wm.textContent = (g.watermark || '') + ' · ' + (g.licenseId || '');
+  } catch(e) {
+    console.error('[ESP] Ошибка в showApp:', e);
+    alert('Ошибка при входе: ' + e.message);
+  }
 }
 function renderUserBadge(){
-  const s = AUTH.session;
-  if(!s) return;
+  const s = AUTH.session; if(!s) return;
   const initial = (s.name||s.login).charAt(0).toUpperCase();
-  document.getElementById('userBadge').innerHTML = `
-    <div class="user-avatar">${initial}</div>
-    <div>
-      <div class="uname">${s.name||s.login}</div>
-      <div class="urole">${ROLE_NAMES[s.role]||s.role}</div>
-    </div>
-  `;
+  document.getElementById('userBadge').innerHTML = `<div class="user-avatar">${initial}</div><div><div class="uname">${s.name||s.login}</div><div class="urole">${ROLE_NAMES[s.role]||s.role}</div></div>`;
 }
 
-/* ============================================================
-   TM (ТЕХНИЧЕСКОЕ МЕСТО)
-   ============================================================ */
 const TM_PREFIX = '1201';
-const TM_REGEX = /^1201-\d{3}-\d{3}-\d{3}-\d{3}-\d{3}-\d{3}$/;
-
 function validateTM(tm){
   if(!tm) return {ok:true, msg:'Поле необязательное', empty:true};
   const parts = tm.split('-');
-  if(parts.length !== 7) return {ok:false, msg:`Ожидается 7 групп (префикс + 6 × 3 цифры), получено ${parts.length}`};
-  if(parts[0] !== TM_PREFIX) return {ok:false, msg:`Префикс должен быть ${TM_PREFIX} (код ЭСП), получено "${parts[0]}"`};
-  for(let i=1;i<7;i++){
-    if(!/^\d{3}$/.test(parts[i])) return {ok:false, msg:`Группа ${i} должна содержать ровно 3 цифры, получено "${parts[i]}"`};
-  }
+  if(parts.length !== 7) return {ok:false, msg:`Ожидается 7 групп, получено ${parts.length}`};
+  if(parts[0] !== TM_PREFIX) return {ok:false, msg:`Префикс должен быть ${TM_PREFIX}`};
+  for(let i=1;i<7;i++){ if(!/^\d{3}$/.test(parts[i])) return {ok:false, msg:`Группа ${i} должна быть из 3 цифр`}; }
   return {ok:true, msg:'Формат корректен'};
 }
-
 function autoFormatTM(input){
   let v = input.value.replace(/[^\d]/g,'');
   if(v.length > 22) v = v.slice(0,22);
   let formatted = '';
   if(v.length === 0){ input.value=''; return; }
-  if(v.length <= 4){
-    formatted = v;
-  } else {
-    formatted = v.slice(0,4);
-    for(let i=4;i<v.length;i+=3){
-      formatted += '-' + v.slice(i, i+3);
-    }
-  }
+  if(v.length <= 4){ formatted = v; }
+  else { formatted = v.slice(0,4); for(let i=4;i<v.length;i+=3){ formatted += '-' + v.slice(i, i+3); } }
   input.value = formatted;
 }
 
-/* ============================================================
-   СОСТОЯНИЕ
-   ============================================================ */
 const state = {
   tab:'normatives', search:'', fSection:'', fCat:'', fRep:'', fSrc:'',
-  calc:[], cards: JSON.parse(localStorage.getItem('esp_cards')||'[]'),
-  custom: JSON.parse(localStorage.getItem('esp_custom')||'[]'),
-  customEquip: JSON.parse(localStorage.getItem('esp_equip')||'[]'),
+  calc:[], cards: Array.isArray(JSON.parse(localStorage.getItem('esp_cards')||'[]')) ? JSON.parse(localStorage.getItem('esp_cards')||'[]') : [],
+  custom: Array.isArray(JSON.parse(localStorage.getItem('esp_custom')||'[]')) ? JSON.parse(localStorage.getItem('esp_custom')||'[]') : [],
+  customEquip: Array.isArray(JSON.parse(localStorage.getItem('esp_equip')||'[]')) ? JSON.parse(localStorage.getItem('esp_equip')||'[]') : [],
   calcSearch:''
 };
 function allNorms(){return [...BASE_NORMS, ...state.custom]}
@@ -796,12 +730,8 @@ function getFiltered(){
   });
 }
 
-/* ============================================================
-   НАВИГАЦИЯ
-   ============================================================ */
 function buildNav(){
-  const role = AUTH.session?.role || 'user';
-  const items = [
+  return [
     {group:'Работа',items:[
       {id:'normatives',label:'Нормативы',ico:'🔍',badge:allNorms().length+''},
       {id:'calculator',label:'Калькулятор',ico:'🧮'},
@@ -819,9 +749,7 @@ function buildNav(){
       {id:'users',label:'Пользователи',ico:'👥',adminOnly:true}
     ]}
   ];
-  return items;
 }
-
 function renderNav(){
   const nav = document.getElementById('navScroll');
   const groups = buildNav();
@@ -831,7 +759,7 @@ function renderNav(){
       <div class="nav-section-title">${g.group}</div>
       ${g.items.map(it=>{
         const disabled = it.adminOnly && role !== 'admin';
-        return `<div class="nav-item${state.tab===it.id?' active':''}${disabled?' admin-only':''}" ${disabled?'':`data-nav="${it.id}"`} title="${disabled?'Только для администратора':''}">
+        return `<div class="nav-item${state.tab===it.id?' active':''}${disabled?' admin-only':''}" ${disabled?'':`data-nav="${it.id}"`}>
           <span class="ico">${it.ico}</span>
           <span>${it.label}</span>
           ${it.badge?`<span class="badge-n">${it.badge}</span>`:''}
@@ -848,9 +776,6 @@ function renderNav(){
   });
 }
 
-/* ============================================================
-   RENDER
-   ============================================================ */
 function appendMsg(html, delay=0){
   return new Promise(res=>{
     setTimeout(()=>{
@@ -865,35 +790,22 @@ function appendMsg(html, delay=0){
   });
 }
 
-function resetChat(){
-  document.getElementById('chat').innerHTML='';
-  renderChat();
-}
-
 function renderChat(){
   const chat = document.getElementById('chat');
   chat.innerHTML='';
-  const titleMap = {
-    normatives:'Нормативы', calculator:'Калькулятор', cards:'Тех. карты',
-    statistics:'Статистика', add:'Добавить норматив', addEquip:'Добавить оборудование',
-    equipment:'Оборудование', about:'О версии',
-    settings:'Пользователь', users:'Пользователи'
-  };
+  const titleMap = {normatives:'Нормативы', calculator:'Калькулятор', cards:'Тех. карты', statistics:'Статистика', add:'Добавить норматив', addEquip:'Добавить оборудование', equipment:'Оборудование', about:'О версии', settings:'Пользователь', users:'Пользователи'};
   document.getElementById('topbarTitle').textContent = titleMap[state.tab] || 'Нормативы';
   const fn = TABS[state.tab];
   if(fn) fn();
 }
 
-/* ============================================================
-   НОРМАТИВЫ
-   ============================================================ */
 function tabNormatives(){
   const filtered = getFiltered();
   const html = `
     <div class="bubble-title">🔍 База нормативов трудозатрат</div>
-    <div class="bubble-sub" id="normsSub">Найдено: <span class="hl">${filtered.length}</span> из ${allNorms().length}. Поиск работает по коду, названию, оборудованию и ТМ.</div>
+    <div class="bubble-sub" id="normsSub">Найдено: <span class="hl">${filtered.length}</span> из ${allNorms().length}.</div>
     <div class="norms-toolbar">
-      <input class="search-inp" id="srch" placeholder="🔎 Поиск: код, название, оборудование, ТМ..." value="${state.search}">
+      <input class="search-inp" id="srch" placeholder="🔎 Поиск..." value="${state.search}">
       <select class="sel" id="f-sec"><option value="">Все участки</option>${Object.entries(SECTION_NAMES).map(([k,v])=>`<option value="${k}" ${state.fSection===k?'selected':''}>${v}</option>`).join('')}</select>
       <select class="sel" id="f-cat"><option value="">Все категории</option>${Object.entries(CATEGORY_NAMES).map(([k,v])=>`<option value="${k}" ${state.fCat===k?'selected':''}>${v}</option>`).join('')}</select>
       <select class="sel" id="f-rep"><option value="">Все типы</option>${Object.entries(REPAIR_NAMES).map(([k,v])=>`<option value="${k}" ${state.fRep===k?'selected':''}>${v}</option>`).join('')}</select>
@@ -961,12 +873,9 @@ function refreshNormsList(){
   const box = document.getElementById('normsListBox');
   if(box){ box.innerHTML = renderNormsList(getFiltered()); bindNormAddButtons(); }
   const sub = document.getElementById('normsSub');
-  if(sub) sub.innerHTML = `Найдено: <span class="hl">${getFiltered().length}</span> из ${allNorms().length}. Поиск работает по коду, названию, оборудованию и ТМ.`;
+  if(sub) sub.innerHTML = `Найдено: <span class="hl">${getFiltered().length}</span> из ${allNorms().length}.`;
 }
 
-/* ============================================================
-   КАЛЬКУЛЯТОР
-   ============================================================ */
 function tabCalculator(){
   const html = `
     <div class="bubble-title">🧮 Калькулятор трудозатрат</div>
@@ -1043,7 +952,6 @@ function renderCalcSidebar(){
 function attachCalcEvents(){
   const s = document.getElementById('calc-srch');
   if(s) s.oninput = e=>{ state.calcSearch=e.target.value; refreshCalcOps(); };
-  /* ВАЖНО: перепривязка кнопок «+ В расчёт» и обработчиков sidebar */
   bindCalcOpsEvents();
   bindCalcEvents();
 }
@@ -1086,9 +994,6 @@ function bindCalcEvents(){
   });
 }
 
-/* ============================================================
-   ТЕХ. КАРТЫ
-   ============================================================ */
 function tabCards(){
   const html = `
     <div class="bubble-title">📄 Технологические карты</div>
@@ -1130,9 +1035,6 @@ function tabCards(){
   });
 }
 
-/* ============================================================
-   СТАТИСТИКА
-   ============================================================ */
 function tabStatistics(){
   const norms=allNorms();
   const avgConf=(norms.reduce((s,n)=>s+n.confidenceLevel,0)/norms.length*100).toFixed(0);
@@ -1179,123 +1081,48 @@ function tabStatistics(){
         return `<div class="tile" style="text-align:center"><div class="tile-v">${c}</div><div class="tile-d">${v}</div></div>`;
       }).join('')}
     </div>
-    <div class="form-sec-title" style="margin-top:20px">🎯 Уровень достоверности</div>
-    <div class="grid4">
-      <div class="tile" style="text-align:center"><div class="tile-v green">${norms.filter(n=>n.confidenceLevel>=0.9).length}</div><div class="tile-d">Высшая (90-100%)</div></div>
-      <div class="tile" style="text-align:center"><div class="tile-v blue">${norms.filter(n=>n.confidenceLevel>=0.7&&n.confidenceLevel<0.9).length}</div><div class="tile-d">Высокая (70-90%)</div></div>
-      <div class="tile" style="text-align:center"><div class="tile-v yellow">${norms.filter(n=>n.confidenceLevel>=0.5&&n.confidenceLevel<0.7).length}</div><div class="tile-d">Средняя (50-70%)</div></div>
-      <div class="tile" style="text-align:center"><div class="tile-v red">${norms.filter(n=>n.confidenceLevel<0.5).length}</div><div class="tile-d">Низкая (&lt;50%)</div></div>
-    </div>
   `;
   appendMsg(html);
 }
 
-/* ============================================================
-   ДОБАВИТЬ НОРМАТИВ
-   ============================================================ */
 function tabAdd(){
   const html = `
     <div class="bubble-title">➕ Добавление нового норматива</div>
-    <div class="bubble-sub">Данные сохраняются в браузере. Поля со звёздочкой обязательны.</div>
     <div id="addFormWarn"></div>
     <form id="addForm">
       <div class="form-sec-title">📋 Основная информация</div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Код операции *</label>
-          <input class="form-inp" name="operationCode" placeholder="ДСП-Н-026" required>
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Участок ЭСП *</label>
-          <select class="form-sel" name="section" required>${Object.entries(SECTION_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
-        </div>
+        <div class="form-group"><label class="form-lbl">Код операции *</label><input class="form-inp" name="operationCode" placeholder="ДСП-Н-026" required></div>
+        <div class="form-group"><label class="form-lbl">Участок ЭСП *</label><select class="form-sel" name="section" required>${Object.entries(SECTION_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
       </div>
-      <div class="form-group">
-        <label class="form-lbl">Наименование операции *</label>
-        <input class="form-inp" name="operationName" placeholder="Замена/ремонт..." required>
+      <div class="form-group"><label class="form-lbl">Наименование операции *</label><input class="form-inp" name="operationName" placeholder="Замена/ремонт..." required></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-lbl">Категория *</label><select class="form-sel" name="equipmentCategory">${Object.entries(CATEGORY_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+        <div class="form-group"><label class="form-lbl">Тип ремонта *</label><select class="form-sel" name="repairType">${Object.entries(REPAIR_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Категория *</label>
-          <select class="form-sel" name="equipmentCategory">${Object.entries(CATEGORY_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Тип ремонта *</label>
-          <select class="form-sel" name="repairType">${Object.entries(REPAIR_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Тип оборудования *</label>
-          <input class="form-inp" name="equipmentType" placeholder="Электродуговая печь" required>
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Единица оборудования</label>
-          <input class="form-inp" name="equipmentUnit" placeholder="ДСП-100">
-        </div>
+        <div class="form-group"><label class="form-lbl">Тип оборудования *</label><input class="form-inp" name="equipmentType" placeholder="Электродуговая печь" required></div>
+        <div class="form-group"><label class="form-lbl">Единица оборудования</label><input class="form-inp" name="equipmentUnit" placeholder="ДСП-100"></div>
       </div>
       <div class="form-sec-title">🏷️ Техническое место (ТМ)</div>
       <div class="form-group">
         <label class="form-lbl">Код ТМ</label>
         <input class="form-inp tm" name="tm" id="tmInput" placeholder="1201-001-002-003-004-005-006" maxlength="28" autocomplete="off">
-        <div class="form-hint" id="tmHint">Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code> (префикс ЭСП + 6 групп по 3 цифры). Поле необязательно.</div>
+        <div class="form-hint" id="tmHint">Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code></div>
       </div>
       <div class="form-sec-title">📐 Норматив</div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Норматив (чел-час) *</label>
-          <input class="form-inp" type="number" name="normValue" min="0.1" step="0.5" required>
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Размер бригады</label>
-          <input class="form-inp" type="number" name="teamSize" value="2" min="1">
-        </div>
+        <div class="form-group"><label class="form-lbl">Норматив (чел-час) *</label><input class="form-inp" type="number" name="normValue" min="0.1" step="0.5" required></div>
+        <div class="form-group"><label class="form-lbl">Размер бригады</label><input class="form-inp" type="number" name="teamSize" value="2" min="1"></div>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Квалификация</label>
-          <input class="form-inp" name="qualification" placeholder="4-5 разряд">
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Сложность (1-5)</label>
-          <select class="form-sel" name="complexity">${[1,2,3,4,5].map(i=>`<option value="${i}" ${i===3?'selected':''}>${i}</option>`).join('')}</select>
-        </div>
+        <div class="form-group"><label class="form-lbl">Квалификация</label><input class="form-inp" name="qualification" placeholder="4-5 разряд"></div>
+        <div class="form-group"><label class="form-lbl">Сложность (1-5)</label><select class="form-sel" name="complexity">${[1,2,3,4,5].map(i=>`<option value="${i}" ${i===3?'selected':''}>${i}</option>`).join('')}</select></div>
       </div>
       <div class="form-sec-title">📑 Источник</div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Тип источника</label>
-          <select class="form-sel" name="sourceType">${Object.entries(SOURCE_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Код источника</label>
-          <input class="form-inp" name="sourceCode" placeholder="ФЕРп-2001 т.18">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Название источника</label>
-          <input class="form-inp" name="sourceTitle" placeholder="Федеральные расценки">
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Достоверность (0-1)</label>
-          <input class="form-inp" type="number" name="confidenceLevel" value="0.85" min="0" max="1" step="0.05">
-        </div>
-      </div>
-      <div class="form-sec-title">📝 Детали</div>
-      <div class="form-group">
-        <label class="form-lbl">Описание</label>
-        <textarea class="form-ta" name="description" placeholder="Подробное описание операции..."></textarea>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Инструмент (через запятую)</label>
-          <input class="form-inp" name="tools" placeholder="Ключи, Лебёдка">
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Безопасность (через запятую)</label>
-          <input class="form-inp" name="safety" placeholder="Наряд-допуск, СИЗ">
-        </div>
+        <div class="form-group"><label class="form-lbl">Тип источника</label><select class="form-sel" name="sourceType">${Object.entries(SOURCE_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+        <div class="form-group"><label class="form-lbl">Код источника</label><input class="form-inp" name="sourceCode" placeholder="ФЕРп-2001 т.18"></div>
       </div>
       <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
         <button type="button" class="btn btn-ghost" id="addFormReset">Сбросить</button>
@@ -1310,17 +1137,13 @@ function tabAdd(){
     tmInp.addEventListener('input', ()=>{
       autoFormatTM(tmInp);
       const v = tmInp.value.trim();
-      if(!v){ tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code> (префикс ЭСП + 6 групп по 3 цифры). Поле необязательно.'; return; }
+      if(!v){ tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>'; return; }
       const r = validateTM(v);
       if(r.ok){ tmInp.classList.add('ok'); tmInp.classList.remove('err'); tmHint.className='form-hint ok'; tmHint.textContent='✓ '+r.msg; }
       else { tmInp.classList.add('err'); tmInp.classList.remove('ok'); tmHint.className='form-hint err'; tmHint.textContent='✕ '+r.msg; }
     });
     form.querySelector('#addFormReset').onclick = ()=>{
-      form.reset();
-      tmInp.classList.remove('err','ok');
-      tmHint.className='form-hint';
-      tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code> (префикс ЭСП + 6 групп по 3 цифры). Поле необязательно.';
-      document.getElementById('addFormWarn').innerHTML='';
+      form.reset(); tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>'; document.getElementById('addFormWarn').innerHTML='';
     };
     form.onsubmit = e=>{
       e.preventDefault();
@@ -1330,129 +1153,54 @@ function tabAdd(){
         const r = validateTM(tmValue);
         if(!r.ok){ document.getElementById('addFormWarn').innerHTML = `<div class="warn-banner err">✕ ТМ-код: ${r.msg}</div>`; return; }
       }
-      const nvRaw = fd.get('normValue');
-      const nv = parseFloat(nvRaw);
-      if(!isFinite(nv) || nv <= 0){
-        document.getElementById('addFormWarn').innerHTML = '<div class="warn-banner err">✕ Норматив должен быть положительным числом (чел-час)</div>';
-        return;
-      }
+      const nv = parseFloat(fd.get('normValue'));
+      if(!isFinite(nv) || nv <= 0){ document.getElementById('addFormWarn').innerHTML = '<div class="warn-banner err">✕ Норматив должен быть > 0</div>'; return; }
       const code = (fd.get('operationCode')||'').trim();
-      const dupCode = allNorms().find(n=>n.operationCode.toLowerCase() === code.toLowerCase());
-      if(dupCode){
-        if(!confirm(`Норматив с кодом "${code}" уже существует:\n"${dupCode.operationName}"\n\nВсё равно добавить?`)) return;
-      }
-      const name = (fd.get('operationName')||'').toLowerCase().trim();
-      const similar = allNorms().filter(n=>{
-        const other = n.operationName.toLowerCase();
-        return other !== name && (other.includes(name) || name.includes(other)) && name.length > 5;
-      });
-      if(similar.length > 0){
-        const list = similar.slice(0,3).map(n=>`• ${n.operationCode} — ${n.operationName}`).join('\n');
-        if(!confirm(`Найдены похожие операции (${similar.length}):\n${list}\n\nВсё равно добавить?`)) return;
-      }
       const norm = {
-        id:'custom-'+Date.now(),
-        operationCode:code, operationName:fd.get('operationName'),
+        id:'custom-'+Date.now(), operationCode:code, operationName:fd.get('operationName'),
         section:fd.get('section'), equipmentCategory:fd.get('equipmentCategory'),
         equipmentType:fd.get('equipmentType'), equipmentUnit:fd.get('equipmentUnit')||'',
-        normValue:nv, unit:'чел-час',
-        teamSize:parseInt(fd.get('teamSize'))||1, qualification:fd.get('qualification')||'',
-        complexity:parseInt(fd.get('complexity'))||3,
-        sourceType:fd.get('sourceType'), sourceCode:fd.get('sourceCode')||'',
-        sourceTitle:fd.get('sourceTitle')||'',
-        confidenceLevel:parseFloat(fd.get('confidenceLevel'))||0.7,
-        repairType:fd.get('repairType'),
-        toolsRequired:(fd.get('tools')||'').split(',').map(s=>s.trim()).filter(Boolean),
-        safetyRequirements:(fd.get('safety')||'').split(',').map(s=>s.trim()).filter(Boolean),
-        description:fd.get('description')||'', actualAvg:undefined, deviationPct:0,
-        tm:tmValue, isCustom:true,
-        author:AUTH.session?.login||'unknown',
-        createdAt:new Date().toISOString()
+        normValue:nv, unit:'чел-час', teamSize:parseInt(fd.get('teamSize'))||1, qualification:fd.get('qualification')||'',
+        complexity:parseInt(fd.get('complexity'))||3, sourceType:fd.get('sourceType'), sourceCode:fd.get('sourceCode')||'',
+        confidenceLevel:0.85, repairType:fd.get('repairType'),
+        toolsRequired:[], safetyRequirements:[], description:'', actualAvg:undefined, deviationPct:0,
+        tm:tmValue, isCustom:true, author:AUTH.session?.login||'unknown', createdAt:new Date().toISOString()
       };
       state.custom.push(norm); saveCustom();
-      appendMsg(`<div class="bubble-title">✅ Норматив добавлен</div>
-        <p>Код: <code>${norm.operationCode}</code><br>
-        Операция: <b>${norm.operationName}</b><br>
-        Норматив: <span class="hl">${norm.normValue} чел-час</span>${norm.tm?`<br>ТМ: <span class="tm-code">${norm.tm}</span>`:''}</p>
-        <p style="color:var(--muted);font-size:12px">Всего пользовательских нормативов: ${state.custom.length}</p>`);
-      form.reset();
-      tmInp.classList.remove('err','ok');
-      tmHint.className='form-hint';
-      tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code> (префикс ЭСП + 6 групп по 3 цифры). Поле необязательно.';
-      document.getElementById('addFormWarn').innerHTML='';
+      appendMsg(`<div class="bubble-title">✅ Норматив добавлен</div><p>Код: <code>${norm.operationCode}</code></p>`);
+      form.reset(); tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>'; document.getElementById('addFormWarn').innerHTML='';
     };
   });
 }
 
-/* ============================================================
-   ДОБАВИТЬ ОБОРУДОВАНИЕ
-   ============================================================ */
 function tabAddEquip(){
   const html = `
     <div class="bubble-title">🔧 Добавление нового оборудования</div>
-    <div class="bubble-sub">Карточка единицы оборудования с привязкой к техническому месту (ТМ).</div>
     <div id="addEqWarn"></div>
     <form id="addEqForm">
       <div class="form-sec-title">📋 Идентификация</div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Код оборудования *</label>
-          <input class="form-inp" name="code" placeholder="ЭКВ-УПС-001" required>
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Участок ЭСП *</label>
-          <select class="form-sel" name="section" required>${Object.entries(SECTION_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
-        </div>
+        <div class="form-group"><label class="form-lbl">Код оборудования *</label><input class="form-inp" name="code" placeholder="ЭКВ-УПС-001" required></div>
+        <div class="form-group"><label class="form-lbl">Участок ЭСП *</label><select class="form-sel" name="section" required>${Object.entries(SECTION_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
       </div>
       <div class="form-sec-title">🏷️ Техническое место (ТМ)</div>
       <div class="form-group">
         <label class="form-lbl">Код ТМ</label>
         <input class="form-inp tm" name="tm" id="tmEqInput" placeholder="1201-001-002-003-004-005-006" maxlength="28" autocomplete="off">
-        <div class="form-hint" id="tmEqHint">Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>. Рекомендуется указывать ТМ для привязки к месту.</div>
+        <div class="form-hint" id="tmEqHint">Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code></div>
       </div>
       <div class="form-sec-title">⚙️ Классификация</div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Категория *</label>
-          <select class="form-sel" name="category">${Object.entries(CATEGORY_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Тип оборудования *</label>
-          <input class="form-inp" name="type" placeholder="Электродуговая печь (ДСП)" required>
-        </div>
+        <div class="form-group"><label class="form-lbl">Категория *</label><select class="form-sel" name="category">${Object.entries(CATEGORY_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+        <div class="form-group"><label class="form-lbl">Тип оборудования *</label><input class="form-inp" name="type" placeholder="ДСП-100" required></div>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Единица / Модель *</label>
-          <input class="form-inp" name="unit" placeholder="ДСП-100" required>
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Производитель</label>
-          <input class="form-inp" name="manufacturer" placeholder="Danieli, SMS group">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Инвентарный номер</label>
-          <input class="form-inp" name="invNumber" placeholder="ИНВ-12345">
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Год выпуска</label>
-          <input class="form-inp" type="number" name="year" placeholder="2020" min="1950" max="2030">
-        </div>
-      </div>
-      <div class="form-sec-title">📐 Технические данные</div>
-      <div class="form-group">
-        <label class="form-lbl">Технические характеристики</label>
-        <textarea class="form-ta" name="specs" placeholder="Мощность, габариты, масса, производительность, рабочее напряжение..."></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-lbl">Примечание</label>
-        <textarea class="form-ta" name="notes" placeholder="Дополнительная информация об оборудовании..."></textarea>
+        <div class="form-group"><label class="form-lbl">Единица / Модель *</label><input class="form-inp" name="unit" placeholder="ДСП-100" required></div>
+        <div class="form-group"><label class="form-lbl">Производитель</label><input class="form-inp" name="manufacturer" placeholder="Danieli"></div>
       </div>
       <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
         <button type="button" class="btn btn-ghost" id="addEqReset">Сбросить</button>
-        <button type="submit" class="btn btn-primary">💾 Сохранить оборудование</button>
+        <button type="submit" class="btn btn-primary">💾 Сохранить</button>
       </div>
     </form>
   `;
@@ -1463,17 +1211,13 @@ function tabAddEquip(){
     tmInp.addEventListener('input', ()=>{
       autoFormatTM(tmInp);
       const v = tmInp.value.trim();
-      if(!v){ tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>. Рекомендуется указывать ТМ.'; return; }
+      if(!v){ tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>'; return; }
       const r = validateTM(v);
       if(r.ok){ tmInp.classList.add('ok'); tmInp.classList.remove('err'); tmHint.className='form-hint ok'; tmHint.textContent='✓ '+r.msg; }
       else { tmInp.classList.add('err'); tmInp.classList.remove('ok'); tmHint.className='form-hint err'; tmHint.textContent='✕ '+r.msg; }
     });
     form.querySelector('#addEqReset').onclick = ()=>{
-      form.reset();
-      tmInp.classList.remove('err','ok');
-      tmHint.className='form-hint';
-      tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>. Рекомендуется указывать ТМ.';
-      document.getElementById('addEqWarn').innerHTML='';
+      form.reset(); tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>'; document.getElementById('addEqWarn').innerHTML='';
     };
     form.onsubmit = e=>{
       e.preventDefault();
@@ -1483,39 +1227,18 @@ function tabAddEquip(){
         const r = validateTM(tmValue);
         if(!r.ok){ document.getElementById('addEqWarn').innerHTML = `<div class="warn-banner err">✕ ТМ-код: ${r.msg}</div>`; return; }
       }
-      const code = (fd.get('code')||'').trim();
-      const dup = state.customEquip.find(e=>e.code.toLowerCase() === code.toLowerCase());
-      if(dup && !confirm(`Оборудование с кодом "${code}" уже существует:\n${dup.type} — ${dup.unit}\n\nВсё равно добавить?`)) return;
       const eq = {
-        id:'eq-'+Date.now(),
-        code, section:fd.get('section'),
-        category:fd.get('category'), type:fd.get('type'),
-        unit:fd.get('unit'), manufacturer:fd.get('manufacturer')||'',
-        invNumber:fd.get('invNumber')||'', year:fd.get('year')||'',
-        specs:fd.get('specs')||'', notes:fd.get('notes')||'',
-        tm:tmValue,
-        author:AUTH.session?.login||'unknown',
-        createdAt:new Date().toISOString()
+        id:'eq-'+Date.now(), code:fd.get('code'), section:fd.get('section'), category:fd.get('category'),
+        type:fd.get('type'), unit:fd.get('unit'), manufacturer:fd.get('manufacturer')||'',
+        tm:tmValue, author:AUTH.session?.login||'unknown', createdAt:new Date().toISOString()
       };
       state.customEquip.push(eq); saveEquip();
-      appendMsg(`<div class="bubble-title">✅ Оборудование добавлено</div>
-        <p>Код: <code>${eq.code}</code><br>
-        Наименование: <b>${eq.type} — ${eq.unit}</b><br>
-        Участок: <b>${SECTION_NAMES[eq.section]}</b><br>
-        Категория: ${CATEGORY_NAMES[eq.category]}${eq.tm?`<br>ТМ: <span class="tm-code">${eq.tm}</span>`:''}${eq.manufacturer?`<br>Производитель: ${eq.manufacturer}`:''}${eq.invNumber?`<br>Инв. номер: <code>${eq.invNumber}</code>`:''}${eq.year?`<br>Год выпуска: ${eq.year}`:''}</p>
-        <p style="color:var(--muted);font-size:12px">Всего единиц оборудования: ${state.customEquip.length}</p>`);
-      form.reset();
-      tmInp.classList.remove('err','ok');
-      tmHint.className='form-hint';
-      tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>. Рекомендуется указывать ТМ.';
-      document.getElementById('addEqWarn').innerHTML='';
+      appendMsg(`<div class="bubble-title">✅ Оборудование добавлено</div>`);
+      form.reset(); tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>'; document.getElementById('addEqWarn').innerHTML='';
     };
   });
 }
 
-/* ============================================================
-   ОБОРУДОВАНИЕ (список)
-   ============================================================ */
 function tabEquipment(){
   const eqBySection = {};
   allNorms().forEach(n=>{
@@ -1525,8 +1248,6 @@ function tabEquipment(){
   });
   const html = `
     <div class="bubble-title">⚙️ Оборудование и ТМ</div>
-    <p>Иерархия: <code>Цех (1201) → 6 групп ТМ → Тип → Единица → Операция</code></p>
-
     <div class="form-sec-title" style="margin-top:14px">🏭 По участкам ЭСП</div>
     ${Object.entries(eqBySection).map(([sec,data])=>`
       <div class="tile" style="margin-bottom:8px">
@@ -1534,18 +1255,12 @@ function tabEquipment(){
           <span style="color:#fff;font-weight:700;font-size:13.5px">${SECTION_NAMES[sec]}</span>
           <span class="badge-mini">${data.types.size} типов • ${data.ops} операций</span>
         </div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px">
-          ${[...data.types].map(t=>`<span class="chip chip-blue" style="font-size:10.5px">${t}</span>`).join('')}
-        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px">${[...data.types].map(t=>`<span class="chip chip-blue" style="font-size:10.5px">${t}</span>`).join('')}</div>
       </div>
     `).join('')}
-
     <div class="form-sec-title" style="margin-top:16px">🔧 Пользовательское оборудование (${state.customEquip.length})</div>
     ${state.customEquip.length===0?`
-      <div class="empty"><div class="empty-ico">🔧</div>
-        <div>Пользовательское оборудование пока не добавлено</div>
-        <button class="btn btn-primary btn-xs" id="goAddEquip" style="margin-top:10px">➕ Добавить оборудование</button>
-      </div>
+      <div class="empty"><div class="empty-ico">🔧</div>Пока нет</div>
     `:state.customEquip.map(eq=>`
       <div class="tile" style="margin-bottom:8px;border-color:rgba(34,197,94,.5)">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">
@@ -1553,220 +1268,49 @@ function tabEquipment(){
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
               <span style="font-family:monospace;font-size:11.5px;color:#93c5fd;font-weight:600">${eq.code}</span>
               <span class="chip chip-green" style="font-size:10px">${SECTION_NAMES[eq.section]||eq.section}</span>
-              <span class="chip chip-cyan" style="font-size:10px">${CATEGORY_NAMES[eq.category]||eq.category}</span>
             </div>
             <div style="color:#fff;font-weight:600;font-size:13.5px">${eq.type} — ${eq.unit}</div>
             ${eq.tm?`<div style="margin-top:6px"><span class="tm-code">ТМ: ${eq.tm}</span></div>`:''}
-            <div style="color:var(--muted);font-size:11.5px;margin-top:4px">
-              ${eq.manufacturer?`Производитель: ${eq.manufacturer} · `:''}${eq.year?`Год: ${eq.year} · `:''}${eq.invNumber?`Инв: ${eq.invNumber}`:''}
-            </div>
-            ${eq.specs?`<div style="color:var(--text);font-size:11.5px;margin-top:6px;padding:6px 8px;background:#111827;border-radius:6px">${eq.specs}</div>`:''}
-            ${eq.notes?`<div style="color:var(--muted);font-size:11.5px;margin-top:6px;font-style:italic">${eq.notes}</div>`:''}
-            <div style="color:var(--dim);font-size:10.5px;margin-top:6px">Добавил: ${eq.author||'—'} · ${new Date(eq.createdAt).toLocaleDateString('ru-RU')}</div>
           </div>
           <button class="btn btn-danger btn-xs" data-del-eq="${eq.id}">🗑 Удалить</button>
         </div>
       </div>
     `).join('')}
-
-    <div class="form-sec-title" style="margin-top:16px">🏷️ Все ТМ-коды в базе</div>
-    ${(()=>{
-      const tms = [...new Set(allNorms().map(n=>n.tm).filter(Boolean))];
-      if(!tms.length) return '<div class="empty" style="padding:20px"><div class="empty-ico">🏷️</div>Пока нет нормативов с ТМ-кодами</div>';
-      return tms.map(tm=>{
-        const cnt = allNorms().filter(n=>n.tm===tm).length;
-        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#111827;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;gap:10px;flex-wrap:wrap">
-          <span class="tm-code">${tm}</span>
-          <span class="badge-mini">${cnt} операций</span>
-        </div>`;
-      }).join('');
-    })()}
   `;
-  appendMsg(html, 100).then(()=>{
-    const goBtn = document.getElementById('goAddEquip');
-    if(goBtn) goBtn.onclick = ()=>{ state.tab='addEquip'; renderNav(); renderChat(); };
+  appendMsg(html).then(()=>{
     document.querySelectorAll('[data-del-eq]').forEach(b=>b.onclick=()=>{
-      if(confirm('Удалить единицу оборудования?')){
-        state.customEquip = state.customEquip.filter(e=>e.id!==b.dataset.delEq);
-        saveEquip(); renderChat();
-      }
+      if(confirm('Удалить?')){ state.customEquip = state.customEquip.filter(e=>e.id!==b.dataset.delEq); saveEquip(); renderChat(); }
     });
   });
 }
 
-/* ============================================================
-   О ВЕРСИИ
-   ============================================================ */
 function tabAbout(){
   const g = window.ESP_GUARD || {};
   appendMsg(`
     <div class="bubble-title">ℹ️ О версии Lite</div>
-    <p>Эта <b>ограниченная версия</b> предназначена для первичной работы инженеров и мастеров участков: поиск нормативов, расчёт трудозатрат, формирование техкарт, добавление собственных записей.</p>
-
-    <div class="form-sec-title" style="margin-top:16px">✅ Что есть в Lite-версии</div>
-    <ul>
-      <li>База из ${allNorms().length} нормативов (112 базовых + ${state.custom.length} ваших)</li>
-      <li>Поиск и фильтрация по участку, категории, ремонту, источнику</li>
-      <li>Поиск по ТМ-коду</li>
-      <li>Калькулятор с добавлением операций</li>
-      <li>Технологические карты с печатью A4 и экспортом TXT</li>
-      <li>Статистика по базе</li>
-      <li>Добавление норматива и оборудования с привязкой к ТМ</li>
-      <li>Аутентификация с ролями: администратор, инженер, пользователь</li>
-      <li><b>Пароли хранятся в виде хешей</b> (SHA-256 через Web Crypto, либо iterated FNV для file://)</li>
-      <li><b>Админ может сбросить пароль</b> инженеру или пользователю (раздел «Пользователи»)</li>
-      <li>Экспорт и импорт JSON (в разделе «Пользователь»)</li>
-      <li>Мягкая проверка дубликатов при добавлении</li>
-    </ul>
-
-    <div class="form-sec-title" style="margin-top:16px">🚧 Что появится в расширенной версии</div>
-    <ul>
-      <li>Доступ к внешним источникам: ФЕР, ГОСТ, ФНП, международные стандарты</li>
-      <li>Модуль дедупликации с автоблокировкой по коду и TM</li>
-      <li>ML-прогнозирование норм для новых операций</li>
-      <li>Интеграция с ERP / CMMS / SCADA</li>
-      <li>Workflow согласования нормативов с ролями</li>
-      <li>Версионирование и полная история изменений</li>
-      <li>Расширенная аналитика и отчёты</li>
-    </ul>
-
-    <div class="form-sec-title" style="margin-top:16px">🏷️ Формат ТМ-кодов</div>
-    <p>Техническое место в системе кодируется по формату: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code></p>
-    <ul>
-      <li><b>1201</b> — префикс цеха ЭСП</li>
-      <li><b>XXX</b> — 6 групп по 3 цифры (иерархия вложенности оборудования)</li>
-      <li>Пример: <code>1201-001-002-003-004-005-006</code></li>
-    </ul>
-
-    <div class="form-sec-title" style="margin-top:16px">🔒 Лицензия и защита</div>
+    <p>Эта <b>ограниченная версия</b> предназначена для первичной работы инженеров.</p>
+    <div class="form-sec-title" style="margin-top:16px">🔒 Лицензия</div>
     <div class="tile">
-      <p><b>Продукт:</b> ESP Norms · Lite</p>
-      <p><b>Лицензия:</b> <code>${g.LICENSE_ID||'—'}</code></p>
-      <p><b>Водяной знак:</b> <span id="esp-wm-about" style="font-family:ui-monospace,monospace;font-size:11.5px;color:#93c5fd">${g.WM||''}</span></p>
-      <p><b>Права:</b> проприетарная, копирование и распространение запрещено.</p>
-      <p><b>Репозиторий:</b> github.com/JfortGitHub/ESPC-APP-SERV-LICENS</p>
+      <p><b>Продукт:</b> ESP Lite v4.9</p>
+      <p><b>Лицензия:</b> <code>${g.licenseId||'—'}</code></p>
+      <p><b>Водяной знак:</b> <span style="font-family:ui-monospace;font-size:11.5px;color:#93c5fd">${g.watermark||''}</span></p>
     </div>
-
-    <div class="form-sec-title" style="margin-top:16px">🔐 Безопасность</div>
-    <ul>
-      <li>Пароли не хранятся в открытом виде — только хеши с солью</li>
-      <li>Для HTTPS/localhost — SHA-256 (Web Crypto)</li>
-      <li>Для file:// — iterated FNV (10 000 раундов), т.к. crypto.subtle там недоступен</li>
-      <li>Админ может сбросить пароль забывшему пользователю</li>
-      <li>Проверка домена по белому списку (ESP GUARD)</li>
-      <li>Периодический баннер лицензии в консоли</li>
-    </ul>
-
-    <div class="form-sec-title" style="margin-top:16px">👤 Текущий пользователь</div>
-    <div class="tile">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <div class="user-avatar" style="width:36px;height:36px;font-size:16px">${(AUTH.session?.name||AUTH.session?.login||'?').charAt(0).toUpperCase()}</div>
-        <div>
-          <div style="color:#fff;font-weight:600">${AUTH.session?.name||'—'}</div>
-          <div style="color:var(--muted);font-size:11.5px">Логин: <code>${AUTH.session?.login||'—'}</code></div>
-        </div>
-      </div>
-      <div class="badge-role ${AUTH.session?.role||'user'}">${ROLE_NAMES[AUTH.session?.role||'user']}</div>
-    </div>
-  `, 50);
+  `);
 }
 
-/* ============================================================
-   НАСТРОЙКИ ПОЛЬЗОВАТЕЛЯ
-   ============================================================ */
 function tabSettings(){
   const s = AUTH.session;
   const html = `
-    <div class="bubble-title">👤 Настройки пользователя</div>
-    <div class="bubble-sub">Управление учётной записью и данными</div>
-
-    <div class="form-sec-title">🪪 Профиль</div>
-    <div class="tile">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
-        <div class="user-avatar" style="width:48px;height:48px;font-size:22px">${(s?.name||'?').charAt(0).toUpperCase()}</div>
-        <div>
-          <div style="color:#fff;font-weight:700;font-size:15px">${s?.name||'—'}</div>
-          <div style="color:var(--muted);font-size:12px">Логин: <code>${s?.login||'—'}</code></div>
-        </div>
-      </div>
-      <span class="badge-role ${s?.role||'user'}">${ROLE_NAMES[s?.role||'user']}</span>
-    </div>
-
-    <div class="form-sec-title" style="margin-top:16px">🔑 Смена пароля</div>
-    <form id="pwdForm">
-      <div class="form-group">
-        <label class="form-lbl">Текущий пароль</label>
-        <input class="form-inp" type="password" name="oldPwd" required autocomplete="current-password">
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Новый пароль (мин. 6 символов)</label>
-          <input class="form-inp" type="password" name="newPwd" minlength="6" required autocomplete="new-password">
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Повторите пароль</label>
-          <input class="form-inp" type="password" name="newPwd2" minlength="6" required autocomplete="new-password">
-        </div>
-      </div>
-      <div id="pwdMsg"></div>
-      <div style="display:flex;justify-content:flex-end;margin-top:8px">
-        <button type="submit" class="btn btn-primary">🔐 Сменить пароль</button>
-      </div>
-    </form>
-
-    <div class="form-sec-title" style="margin-top:20px">💾 Резервное копирование</div>
+    <div class="bubble-title">👤 Настройки</div>
+    <div class="form-sec-title">💾 Резервное копирование</div>
     <div class="grid2">
-      <div class="tile">
-        <div class="tile-h">Экспорт всех данных</div>
-        <div class="tile-d" style="margin-bottom:10px">Скачать JSON со всеми нормативами, оборудованием и техкартами</div>
-        <button class="btn btn-success btn-xs" id="expAll">📥 Скачать JSON</button>
-      </div>
-      <div class="tile">
-        <div class="tile-h">Импорт данных</div>
-        <div class="tile-d" style="margin-bottom:10px">Загрузить ранее сохранённый JSON (заменит текущие данные)</div>
-        <input type="file" id="impFile" accept=".json" style="display:none">
-        <button class="btn btn-ghost btn-xs" id="impBtn">📤 Загрузить JSON</button>
-      </div>
-    </div>
-
-    <div class="form-sec-title" style="margin-top:20px">📊 Сводка по вашим данным</div>
-    <div class="grid3">
-      <div class="tile" style="text-align:center"><div class="tile-v blue">${state.custom.length}</div><div class="tile-d">Ваших нормативов</div></div>
-      <div class="tile" style="text-align:center"><div class="tile-v green">${state.customEquip.length}</div><div class="tile-d">Ваших единиц оборудования</div></div>
-      <div class="tile" style="text-align:center"><div class="tile-v purple">${state.cards.length}</div><div class="tile-d">Техкарт</div></div>
-    </div>
-
-    <div class="form-sec-title" style="margin-top:20px">🗑 Очистка данных</div>
-    <div class="warn-banner">
-      ⚠️ <div><b>Внимание!</b> Действия ниже необратимы. Рекомендуем сначала скачать резервную копию.</div>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn btn-danger btn-xs" id="clearCustom">Удалить мои нормативы</button>
-      <button class="btn btn-danger btn-xs" id="clearEquip">Удалить моё оборудование</button>
-      <button class="btn btn-danger btn-xs" id="clearCards">Удалить техкарты</button>
+      <div class="tile"><button class="btn btn-success btn-xs" id="expAll">📥 Скачать JSON</button></div>
+      <div class="tile"><input type="file" id="impFile" accept=".json" style="display:none"><button class="btn btn-ghost btn-xs" id="impBtn">📤 Загрузить JSON</button></div>
     </div>
   `;
   appendMsg(html).then(()=>{
-    document.getElementById('pwdForm').onsubmit = async e=>{
-      e.preventDefault();
-      const fd = new FormData(e.target);
-      const oldP = fd.get('oldPwd'), newP = fd.get('newPwd'), newP2 = fd.get('newPwd2');
-      const msg = document.getElementById('pwdMsg');
-      const u = AUTH.users.find(x=>x.login === s.login);
-      if(!u){ msg.innerHTML = '<div class="warn-banner err">✕ Пользователь не найден</div>'; return; }
-      const ok = await verifyPwd(oldP, u.password);
-      if(!ok){ msg.innerHTML = '<div class="warn-banner err">✕ Текущий пароль неверен</div>'; return; }
-      if(newP !== newP2){ msg.innerHTML = '<div class="warn-banner err">✕ Пароли не совпадают</div>'; return; }
-      if(newP.length < 6){ msg.innerHTML = '<div class="warn-banner err">✕ Минимум 6 символов</div>'; return; }
-      u.password = await hashPwd(newP); saveUsers();
-      msg.innerHTML = '<div class="warn-banner ok">✓ Пароль успешно изменён</div>';
-      e.target.reset();
-    };
     document.getElementById('expAll').onclick = ()=>{
-      const data = {
-        _meta:{app:'Нормативы ЭСП', version:'3.0 Lite', exportedAt:new Date().toISOString(), exportedBy:AUTH.session?.login},
-        custom: state.custom, customEquip: state.customEquip, cards: state.cards
-      };
+      const data = {_meta:{app:'ESP Lite v4.9', date:new Date().toISOString()}, custom: state.custom, customEquip: state.customEquip, cards: state.cards};
       downloadFile(`esp_backup_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(data, null, 2), 'application/json');
     };
     document.getElementById('impBtn').onclick = ()=>document.getElementById('impFile').click();
@@ -1776,168 +1320,65 @@ function tabSettings(){
       reader.onload = ()=>{
         try{
           const data = JSON.parse(reader.result);
-          if(!confirm(`Импортировать данные?\n\nНормативов: ${(data.custom||[]).length}\nОборудования: ${(data.customEquip||[]).length}\nТехкарт: ${(data.cards||[]).length}\n\nТекущие данные будут заменены.`)) return;
-          state.custom = data.custom||[]; saveCustom();
-          state.customEquip = data.customEquip||[]; saveEquip();
-          state.cards = data.cards||[]; saveCards();
-          alert('Импорт выполнен');
-          renderChat();
-        }catch(e){ alert('Ошибка чтения файла: '+e.message); }
+          if(!confirm('Импортировать данные? Текущие будут заменены.')) return;
+          state.custom = Array.isArray(data.custom) ? data.custom : []; saveCustom();
+          state.customEquip = Array.isArray(data.customEquip) ? data.customEquip : []; saveEquip();
+          state.cards = Array.isArray(data.cards) ? data.cards : []; saveCards();
+          alert('Импорт выполнен'); renderChat();
+        }catch(e){ alert('Ошибка чтения JSON'); }
       };
       reader.readAsText(file);
       ev.target.value='';
     };
-    document.getElementById('clearCustom').onclick = ()=>{
-      if(!confirm('Удалить все ваши нормативы?')) return;
-      state.custom=[]; saveCustom(); renderChat();
-    };
-    document.getElementById('clearEquip').onclick = ()=>{
-      if(!confirm('Удалить всё ваше оборудование?')) return;
-      state.customEquip=[]; saveEquip(); renderChat();
-    };
-    document.getElementById('clearCards').onclick = ()=>{
-      if(!confirm('Удалить все техкарты?')) return;
-      state.cards=[]; saveCards(); renderChat();
-    };
   });
 }
 
-/* ============================================================
-   УПРАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯМИ (админ)
-   ============================================================ */
 function tabUsers(){
-  if(AUTH.session?.role !== 'admin'){
-    appendMsg('<div class="warn-banner err">✕ Доступ только для администратора</div>');
-    return;
-  }
+  if(AUTH.session?.role !== 'admin'){ appendMsg('<div class="warn-banner err">✕ Доступ только для администратора</div>'); return; }
   const html = `
-    <div class="bubble-title">👥 Управление пользователями</div>
-    <div class="bubble-sub">Только для администратора. Всего пользователей: <span class="hl">${AUTH.users.length}</span>. Пароли хранятся в виде хешей.</div>
-
+    <div class="bubble-title">👥 Пользователи</div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px">
       ${AUTH.users.map(u=>`
-        <div class="tile" style="border-color:${u.login===AUTH.session.login?'rgba(37,99,235,.6)':'var(--border)'}">
+        <div class="tile">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
             <div style="flex:1;min-width:180px">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap">
                 <span style="font-family:monospace;font-size:12px;color:#93c5fd;font-weight:600">${u.login}</span>
-                ${u.login===AUTH.session.login?'<span class="badge-mini">это вы</span>':''}
-                ${isHashed(u.password)?'<span class="badge-mini" title="Пароль хранится в виде хеша">🔒 хеш</span>':'<span class="badge-mini" style="background:rgba(220,38,38,.2);color:#fca5a5" title="Пароль в открытом виде — требуется миграция">⚠ plaintext</span>'}
+                ${u.login===AUTH.session.login?'<span class="badge-mini">вы</span>':''}
               </div>
               <div style="color:#fff;font-weight:600;font-size:13.5px">${u.name}</div>
               <div style="margin-top:6px"><span class="badge-role ${u.role}">${ROLE_NAMES[u.role]||u.role}</span></div>
             </div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap">
-              ${u.login!==AUTH.session.login?`<button class="btn btn-ghost btn-xs" data-reset-pwd="${u.login}" title="Задать новый пароль">🔑 Сбросить пароль</button>`:''}
-              ${u.login!==AUTH.session.login?`<button class="btn btn-danger btn-xs" data-del-user="${u.login}">🗑 Удалить</button>`:''}
-            </div>
+            ${u.login!==AUTH.session.login?`<button class="btn btn-danger btn-xs" data-del-user="${u.login}">🗑 Удалить</button>`:''}
           </div>
         </div>
       `).join('')}
     </div>
-
-    <div class="form-sec-title">➕ Добавить пользователя</div>
-    <form id="addUserForm">
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Логин *</label>
-          <input class="form-inp" name="login" required pattern="[a-zA-Z0-9_]{3,20}" title="3-20 символов: латиница, цифры, _">
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">ФИО *</label>
-          <input class="form-inp" name="name" placeholder="Иванов Иван Иванович" required>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-lbl">Пароль * (мин. 6)</label>
-          <input class="form-inp" type="password" name="password" minlength="6" required>
-        </div>
-        <div class="form-group">
-          <label class="form-lbl">Роль *</label>
-          <select class="form-sel" name="role">
-            <option value="user">Пользователь</option>
-            <option value="engineer">Инженер</option>
-            <option value="admin">Администратор</option>
-          </select>
-        </div>
-      </div>
-      <div style="display:flex;justify-content:flex-end;margin-top:8px">
-        <button type="submit" class="btn btn-primary">➕ Добавить</button>
-      </div>
-    </form>
   `;
   appendMsg(html).then(()=>{
     document.querySelectorAll('[data-del-user]').forEach(b=>b.onclick=()=>{
       const login = b.dataset.delUser;
-      if(!confirm(`Удалить пользователя "${login}"?`)) return;
-      AUTH.users = AUTH.users.filter(u=>u.login !== login);
-      saveUsers(); renderChat();
+      if(confirm(`Удалить "${login}"?`)){ AUTH.users = AUTH.users.filter(u=>u.login !== login); saveUsers(); renderChat(); }
     });
-    document.querySelectorAll('[data-reset-pwd]').forEach(b=>b.onclick=async ()=>{
-      const login = b.dataset.resetPwd;
-      const np = prompt(`Новый пароль для "${login}" (мин. 6 символов):`);
-      if(np === null) return;
-      if(np.length < 6){ alert('Минимум 6 символов'); return; }
-      const u = AUTH.users.find(x=>x.login === login);
-      if(!u){ alert('Пользователь не найден'); return; }
-      u.password = await hashPwd(np);
-      saveUsers();
-      alert(`Пароль для "${login}" изменён. Сообщите его пользователю.`);
-      renderChat();
-    });
-    document.getElementById('addUserForm').onsubmit = async e=>{
-      e.preventDefault();
-      const fd = new FormData(e.target);
-      const login = fd.get('login').trim();
-      if(AUTH.users.find(u=>u.login === login)){ alert('Пользователь с таким логином уже существует'); return; }
-      const pwd = fd.get('password');
-      AUTH.users.push({
-        login, password: await hashPwd(pwd),
-        name: fd.get('name'), role: fd.get('role'),
-        createdAt: new Date().toISOString()
-      });
-      saveUsers();
-      alert(`Пользователь "${login}" добавлен`);
-      renderChat();
-    };
   });
 }
 
-/* ============================================================
-   МОДАЛЬНЫЕ ОКНА
-   ============================================================ */
 function showCreateCardModal(){
   const total = state.calc.reduce((s,i)=>s+i.norm.normValue*i.qty,0);
   const days = Math.ceil(total/8);
   const num = `ТК-${new Date().getFullYear()}-${String(state.cards.length+1).padStart(3,'0')}`;
-  const m = document.createElement('div');
-  m.className='modal-ov';
+  const m = document.createElement('div'); m.className='modal-ov';
   m.innerHTML = `
     <div class="modal">
-      <div class="modal-head">
-        <div class="modal-title">📄 Создание технологической карты</div>
-        <button class="modal-close" data-close>×</button>
-      </div>
+      <div class="modal-head"><div class="modal-title">📄 Создание техкарты</div><button class="modal-close" data-close>×</button></div>
       <div class="modal-body">
         <div class="form-group"><label class="form-lbl">Номер карты *</label><input class="form-inp" id="cc-num" value="${num}"></div>
         <div class="form-row">
           <div class="form-group"><label class="form-lbl">Тип ремонта *</label><select class="form-sel" id="cc-rep"><option>ТР</option><option selected>СР</option><option>КР</option></select></div>
           <div class="form-group"><label class="form-lbl">Оборудование *</label><input class="form-inp" id="cc-eq" value="ДСП-100 №1"></div>
         </div>
-        <div class="form-group">
-          <label class="form-lbl">ТМ (техническое место)</label>
-          <input class="form-inp tm" id="cc-tm" placeholder="1201-XXX-XXX-XXX-XXX-XXX-XXX" maxlength="28" autocomplete="off">
-        </div>
-        <div class="grid3" style="margin-top:12px">
-          <div class="tile" style="text-align:center"><div class="tile-v">${state.calc.length}</div><div class="tile-d">Операций</div></div>
-          <div class="tile" style="text-align:center"><div class="tile-v blue">${total}</div><div class="tile-d">Чел-час</div></div>
-          <div class="tile" style="text-align:center"><div class="tile-v purple">${days}</div><div class="tile-d">Дней</div></div>
-        </div>
-        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px">
-          <button class="btn btn-ghost" data-close>Отмена</button>
-          <button class="btn btn-primary" id="cc-save">💾 Создать карту</button>
-        </div>
+        <div class="form-group"><label class="form-lbl">ТМ</label><input class="form-inp tm" id="cc-tm" placeholder="1201-XXX-XXX-XXX-XXX-XXX-XXX" maxlength="28"></div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px"><button class="btn btn-ghost" data-close>Отмена</button><button class="btn btn-primary" id="cc-save">💾 Создать</button></div>
       </div>
     </div>`;
   document.body.appendChild(m);
@@ -1947,68 +1388,19 @@ function showCreateCardModal(){
   document.getElementById('cc-save').onclick = ()=>{
     const tmValue = (tmInp.value||'').trim();
     if(tmValue){ const r = validateTM(tmValue); if(!r.ok){ alert('ТМ: '+r.msg); return; } }
-    const card = {
-      id:Date.now()+'', cardNumber:document.getElementById('cc-num').value,
-      equipmentName:document.getElementById('cc-eq').value,
-      tm: tmValue,
-      repairType:document.getElementById('cc-rep').value,
-      operations:state.calc.map(i=>({normativeId:i.norm.id,quantity:i.qty})),
-      totalHours:total, calendarDays:days,
-      createdAt:new Date().toISOString(), status:'draft',
-      author:AUTH.session?.login||'unknown'
-    };
-    state.cards.push(card); saveCards(); state.calc=[]; m.remove();
-    state.tab='cards'; renderNav(); renderChat();
+    const card = { id:Date.now()+'', cardNumber:document.getElementById('cc-num').value, equipmentName:document.getElementById('cc-eq').value, tm: tmValue, repairType:document.getElementById('cc-rep').value, operations:state.calc.map(i=>({normativeId:i.norm.id,quantity:i.qty})), totalHours:total, calendarDays:days, createdAt:new Date().toISOString(), author:AUTH.session?.login||'unknown' };
+    state.cards.push(card); saveCards(); state.calc=[]; m.remove(); state.tab='cards'; renderNav(); renderChat();
   };
 }
 
 function showViewCard(card){
   if(!card) return;
-  const m = document.createElement('div');
-  m.className='modal-ov';
+  const m = document.createElement('div'); m.className='modal-ov';
   const rows = card.operations.map((op,i)=>{
-    const n = allNorms().find(x=>x.id===op.normativeId);
-    if(!n) return '';
-    return `<tr style="border-top:1px solid var(--border-soft)">
-      <td style="padding:8px 12px;color:var(--dim)">${i+1}</td>
-      <td style="padding:8px 12px;font-family:monospace;font-size:11px;color:#93c5fd">${n.operationCode}</td>
-      <td style="padding:8px 12px;color:#fff">${n.operationName}${n.tm?`<br><span class="tm-code" style="font-size:9.5px;margin-top:3px">${n.tm}</span>`:''}</td>
-      <td style="padding:8px 12px;text-align:center">${n.normValue}</td>
-      <td style="padding:8px 12px;text-align:center">${op.quantity}</td>
-      <td style="padding:8px 12px;text-align:center;font-weight:700;color:#fff">${n.normValue*op.quantity}</td>
-    </tr>`;
+    const n = allNorms().find(x=>x.id===op.normativeId); if(!n) return '';
+    return `<tr style="border-top:1px solid var(--border-soft)"><td style="padding:8px 12px">${i+1}</td><td style="padding:8px 12px">${n.operationCode}</td><td style="padding:8px 12px">${n.operationName}</td><td style="padding:8px 12px">${n.normValue}</td><td style="padding:8px 12px">${op.quantity}</td><td style="padding:8px 12px">${n.normValue*op.quantity}</td></tr>`;
   }).join('');
-  m.innerHTML = `
-    <div class="modal" style="max-width:900px">
-      <div class="modal-head">
-        <div>
-          <div class="modal-title">${card.cardNumber}</div>
-          <div style="color:var(--muted);font-size:12px;margin-top:3px">${card.equipmentName}${card.tm?' • ТМ: '+card.tm:''}</div>
-        </div>
-        <button class="modal-close" data-close>×</button>
-      </div>
-      <div class="modal-body">
-        <div class="grid3" style="margin-bottom:14px">
-          <div class="tile" style="text-align:center"><div class="tile-v">${card.totalHours}</div><div class="tile-d">чел-час</div></div>
-          <div class="tile" style="text-align:center"><div class="tile-v blue">${card.calendarDays}</div><div class="tile-d">дней</div></div>
-          <div class="tile" style="text-align:center"><div class="tile-v purple">${card.operations.length}</div><div class="tile-d">операций</div></div>
-        </div>
-        <div style="background:#111827;border-radius:10px;overflow-x:auto;border:1px solid var(--border)">
-          <table style="width:100%;font-size:13px;border-collapse:collapse">
-            <thead><tr style="background:#374151;color:var(--muted);font-size:11px;text-transform:uppercase">
-              <th style="padding:8px 12px;text-align:left">№</th><th style="padding:8px 12px;text-align:left">Код</th>
-              <th style="padding:8px 12px;text-align:left">Операция</th><th style="padding:8px 12px;text-align:center">Норма</th>
-              <th style="padding:8px 12px;text-align:center">Кол-во</th><th style="padding:8px 12px;text-align:center">Итого</th>
-            </tr></thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:16px">
-          <button class="btn btn-success" id="cardPrint">🖨 Печать</button>
-          <button class="btn btn-ghost" id="cardTxt">📥 TXT</button>
-        </div>
-      </div>
-    </div>`;
+  m.innerHTML = `<div class="modal"><div class="modal-head"><div class="modal-title">${card.cardNumber}</div><button class="modal-close" data-close>×</button></div><div class="modal-body"><div style="background:#111827;border-radius:10px;overflow-x:auto;border:1px solid var(--border)"><table style="width:100%;font-size:13px;border-collapse:collapse"><thead><tr style="background:#374151"><th style="padding:8px 12px">№</th><th style="padding:8px 12px">Код</th><th style="padding:8px 12px">Операция</th><th style="padding:8px 12px">Норма</th><th style="padding:8px 12px">Кол-во</th><th style="padding:8px 12px">Итого</th></tr></thead><tbody>${rows}</tbody></table></div><div style="display:flex;gap:8px;margin-top:16px"><button class="btn btn-success" id="cardPrint">🖨 Печать</button><button class="btn btn-ghost" id="cardTxt">📥 TXT</button></div></div></div>`;
   document.body.appendChild(m);
   m.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>m.remove());
   m.querySelector('#cardPrint').onclick = ()=>printCard(card);
@@ -2020,19 +1412,17 @@ function generateCardText(card){
     const n = allNorms().find(x=>x.id===op.normativeId);
     return n?`${i+1}. ${n.operationCode} | ${n.operationName} | ${n.normValue} × ${op.quantity} = ${n.normValue*op.quantity} чел-час${n.tm?' | ТМ: '+n.tm:''}`:'';
   }).filter(Boolean).join('\n');
-  return `ТЕХНОЛОГИЧЕСКАЯ КАРТА\n${card.cardNumber}\nОборудование: ${card.equipmentName}\n${card.tm?'ТМ: '+card.tm+'\n':''}Тип ремонта: ${REPAIR_NAMES[card.repairType]}\nДата: ${new Date(card.createdAt).toLocaleDateString('ru-RU')}\nАвтор: ${card.author||'—'}\n\n${ops}\n\nИТОГО: ${card.totalHours} чел-час\nДней: ${card.calendarDays}`;
+  return `ТЕХНОЛОГИЧЕСКАЯ КАРТА\n${card.cardNumber}\nОборудование: ${card.equipmentName}\n${card.tm?'ТМ: '+card.tm+'\n':''}Тип ремонта: ${REPAIR_NAMES[card.repairType]}\nДата: ${new Date(card.createdAt).toLocaleDateString('ru-RU')}\n\n${ops}\n\nИТОГО: ${card.totalHours} чел-час`;
 }
 
 function printCard(card){
   if(!card) return;
   const rows = card.operations.map((op,i)=>{
-    const n = allNorms().find(x=>x.id===op.normativeId);
-    if(!n) return '';
-    return `<tr><td style="border:1px solid #333;padding:5px;text-align:center">${i+1}</td><td style="border:1px solid #333;padding:5px;font-family:monospace;font-size:10px">${n.operationCode}</td><td style="border:1px solid #333;padding:5px">${n.operationName}</td><td style="border:1px solid #333;padding:5px;font-family:monospace;font-size:9px">${n.tm||'—'}</td><td style="border:1px solid #333;padding:5px;text-align:center">${n.normValue}</td><td style="border:1px solid #333;padding:5px;text-align:center">${n.unit}</td><td style="border:1px solid #333;padding:5px;text-align:center">${op.quantity}</td><td style="border:1px solid #333;padding:5px;text-align:center;font-weight:bold">${n.normValue*op.quantity}</td><td style="border:1px solid #333;padding:5px;text-align:center">${n.teamSize}</td><td style="border:1px solid #333;padding:5px;font-size:10px">${n.qualification}</td></tr>`;
+    const n = allNorms().find(x=>x.id===op.normativeId); if(!n) return '';
+    return `<tr><td>${i+1}</td><td>${n.operationCode}</td><td>${n.operationName}</td><td>${n.tm||'—'}</td><td>${n.normValue}</td><td>${n.unit}</td><td>${op.quantity}</td><td>${n.normValue*op.quantity}</td><td>${n.teamSize}</td><td>${n.qualification}</td></tr>`;
   }).filter(Boolean).join('');
-  const w = window.open('','_blank');
-  if(!w) return;
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>ТК ${card.cardNumber}</title><style>@page{size:A4 landscape;margin:12mm}body{font-family:Arial,sans-serif;font-size:10pt;color:#000}.header{text-align:center;margin-bottom:16px;border-bottom:2px solid #000;padding-bottom:8px}.header h1{font-size:15pt;margin:0}.header h2{font-size:12pt;margin:4px 0 0;font-weight:normal}table{width:100%;border-collapse:collapse;margin:12px 0;font-size:9.5pt}th{background:#e5e7eb;border:1px solid #333;padding:5px;font-weight:bold;text-align:center}.total-row{background:#f3f4f6;font-weight:bold}.signatures{display:flex;justify-content:space-between;margin-top:36px}.signature{width:45%}.signature-line{border-bottom:1px solid #000;margin-top:28px;padding-top:4px;font-size:8pt}.no-print{text-align:center;margin-bottom:16px}.no-print button{padding:8px 16px;font-size:13px;cursor:pointer;border:none;border-radius:5px;margin:0 4px}@media print{.no-print{display:none}}</style></head><body><div class="no-print"><button onclick="window.print()" style="background:#2563eb;color:white">🖨 Печать</button><button onclick="window.close()" style="background:#6b7280;color:white">Закрыть</button></div><div class="header"><h1>ТЕХНОЛОГИЧЕСКАЯ КАРТА</h1><h2>${card.cardNumber}</h2></div><div style="margin:12px 0"><div style="margin:4px 0"><strong>Оборудование:</strong> ${card.equipmentName}</div>${card.tm?`<div style="margin:4px 0"><strong>ТМ:</strong> ${card.tm}</div>`:''}<div style="margin:4px 0"><strong>Тип ремонта:</strong> ${REPAIR_NAMES[card.repairType]}</div><div style="margin:4px 0"><strong>Дата:</strong> ${new Date(card.createdAt).toLocaleDateString('ru-RU')}</div><div style="margin:4px 0"><strong>Автор:</strong> ${card.author||'—'}</div></div><h3>Перечень операций</h3><table><thead><tr><th>№</th><th>Код</th><th>Операция</th><th>ТМ</th><th>Норма</th><th>Ед.</th><th>Кол-во</th><th>Итого</th><th>Бриг.</th><th>Разряд</th></tr></thead><tbody>${rows}</tbody><tfoot><tr class="total-row"><td colspan="7" style="text-align:right;border:1px solid #333;padding:7px">ИТОГО:</td><td style="text-align:center;border:1px solid #333;padding:7px;font-size:11pt">${card.totalHours} чел-час</td><td colspan="2" style="text-align:center;border:1px solid #333;padding:7px">Дней: ${card.calendarDays}</td></tr></tfoot></table><div class="signatures"><div class="signature"><div class="signature-line">Разработал (инженер)</div></div><div class="signature"><div class="signature-line">Согласовал (начальник участка)</div></div></div><div class="signatures" style="margin-top:16px"><div class="signature"><div class="signature-line">Утвердил (начальник цеха)</div></div><div class="signature"><div class="signature-line">Дата утверждения</div></div></div></body></html>`);
+  const w = window.open('','_blank'); if(!w) return;
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial;font-size:10pt}table{width:100%;border-collapse:collapse}th,td{border:1px solid #333;padding:5px}</style></head><body><h1>ТЕХНОЛОГИЧЕСКАЯ КАРТА</h1><h2>${card.cardNumber}</h2><p>Оборудование: ${card.equipmentName}</p><table><thead><tr><th>№</th><th>Код</th><th>Операция</th><th>ТМ</th><th>Норма</th><th>Ед.</th><th>Кол-во</th><th>Итого</th><th>Бриг.</th><th>Разряд</th></tr></thead><tbody>${rows}</tbody></table><p><b>ИТОГО: ${card.totalHours} чел-час</b></p><button onclick="window.print()">🖨 Печать</button></body></html>`);
   w.document.close();
 }
 
@@ -2051,9 +1441,6 @@ function exportCsv(){
   downloadFile(`расчёт_${new Date().toISOString().slice(0,10)}.csv`, '\uFEFF'+csv, 'text/csv');
 }
 
-/* ============================================================
-   TABS MAP
-   ============================================================ */
 const TABS = {
   normatives:tabNormatives, calculator:tabCalculator, cards:tabCards,
   statistics:tabStatistics, add:tabAdd, addEquip:tabAddEquip,
@@ -2061,43 +1448,22 @@ const TABS = {
   settings:tabSettings, users:tabUsers
 };
 
-/* ============================================================
-   ИНИЦИАЛИЗАЦИЯ
-   ============================================================ */
 document.getElementById('loginForm').onsubmit = async e=>{
   e.preventDefault();
   const login = document.getElementById('loginInput').value.trim();
   const pwd = document.getElementById('passwordInput').value;
   const ok = await tryLogin(login, pwd);
-  if(ok){
-    showApp();
-  } else {
+  if(ok){ showApp(); } else {
     const err = document.getElementById('loginError');
     err.classList.add('show');
     document.getElementById('passwordInput').value='';
     setTimeout(()=>err.classList.remove('show'), 2500);
   }
 };
-document.querySelectorAll('.login-account').forEach(el=>{
-  el.onclick = ()=>{
-    document.getElementById('loginInput').value = el.dataset.login;
-    document.getElementById('passwordInput').value = el.dataset.pwd;
-    document.getElementById('loginError').classList.remove('show');
-  };
-});
 
-/* PATCH: миграция паролей + восстановление сессии */
 (async ()=>{
-  try{
-    await migratePasswords();
-  }catch(e){
-    console.error('[ESP] Ошибка миграции паролей:', e);
-  }
-  if(restoreSession()){
-    showApp();
-  } else {
-    showLogin();
-  }
+  try{ await migratePasswords(); }catch(e){ console.error(e); }
+  if(restoreSession()){ showApp(); } else { showLogin(); }
 })();
 </script>
 </body>
