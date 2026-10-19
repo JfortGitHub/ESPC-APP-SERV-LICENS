@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Нормативы ЭСП — Lite v4.9</title>
+<title>Нормативы ЭСПЦ — Lite V4.10</title>
 <meta name="author" content="ЭСПЦ">
 <meta name="copyright" content="© 2024–2026 ЭСПЦ. Все права защищены.">
 <meta name="license" content="ESP-PRO-2026-0001">
@@ -95,7 +95,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
 .login-account .login-name{font-family:monospace;font-size:11.5px;color:#93c5fd;margin-top:2px}
 
 /* ═══ APP ═══ */
-.app{display:grid;grid-template-columns:290px 1fr;height:calc(var(--vh,1vh) * 100);overflow:hidden}
+.app{display:grid;grid-template-columns:290px 1fr;height:100vh;height:100dvh;height:calc(var(--vh,1vh) * 100);min-height:100vh;min-height:100dvh;overflow:hidden}
 .app.hidden{display:none !important}
 .sidebar{background:#1f2937;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .brand{padding:20px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#1e3a8a,#312e81,#581c87)}
@@ -269,6 +269,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
 
 @media(max-width:900px){
   .app{grid-template-columns:0 1fr}
+  .main{grid-column:2}
   .sidebar{position:fixed;left:0;top:0;bottom:0;width:280px;z-index:200;transform:translateX(-100%);transition:transform .3s;padding-top:var(--sat);padding-bottom:var(--sab)}
   .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,.6)}
   .mob-toggle{display:inline-flex}
@@ -337,7 +338,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
 <script>
 (function(global){
   'use strict';
-  const PRODUCT = 'ESP Lite v4.9';
+  const PRODUCT = 'ESP Lite V4.10';
   const OWNER = 'ЭСПЦ';
   const LICENSE_ID = 'ESP-PRO-2026-0001';
   const COPYRIGHT = '© 2024–2026 ЭСПЦ · Все права защищены';
@@ -401,8 +402,8 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
 <div class="login-screen" id="loginScreen">
   <form class="login-box" id="loginForm" autocomplete="off">
     <div class="login-logo">⚙️</div>
-    <h2>Нормативы ЭСП</h2>
-    <div class="sub">Ограниченная версия · <b>Lite v4.9</b></div>
+    <h2>Нормативы ЭСПЦ</h2>
+    <div class="sub">Ограниченная версия · <b>Lite V4.10</b></div>
     <div class="login-error" id="loginError">Неверный логин или пароль</div>
     <div class="login-field"><label>Логин</label><input name="login" id="loginInput" placeholder="Введите логин" required autocomplete="username"></div>
     <div class="login-field"><label>Пароль</label><input name="password" id="passwordInput" type="password" placeholder="Введите пароль" required autocomplete="current-password"></div>
@@ -420,9 +421,9 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
 
 <div class="app hidden" id="app">
   <aside class="sidebar" id="sidebar">
-    <div class="brand"><div class="brand-icon">⚙️</div><div class="brand-text"><h1>Нормативы ЭСП</h1><p>Lite · Трудозатраты · Ремонт</p></div></div>
+    <div class="brand"><div class="brand-icon">⚙️</div><div class="brand-text"><h1>Нормативы ЭСПЦ</h1><p>Lite · Трудозатраты · Ремонт</p></div></div>
     <div class="nav-scroll" id="navScroll"></div>
-    <div class="sidebar-footer">ЭСП © 2024–2026 · v4.9 Lite<div id="esp-wm"></div></div>
+    <div class="sidebar-footer">ЭСПЦ © 2024–2026 · V4.10 Lite<div id="esp-wm"></div></div>
   </aside>
   <main class="main">
     <div class="topbar">
@@ -688,22 +689,34 @@ function renderUserBadge(){
   document.getElementById('userBadge').innerHTML = `<div class="user-avatar">${initial}</div><div><div class="uname">${s.name||s.login}</div><div class="urole">${ROLE_NAMES[s.role]||s.role}</div></div>`;
 }
 
-const TM_PREFIX = '1201';
+// ═══ ТМ: XXXX [ - XXX [ - XXX ... ] ] — до 7 групп (22 цифры). Цех — любой 4-значный.
+const TM_PREFIX_LEN = 4;
+const TM_MAX_GROUPS = 6;
+const TM_MAX_DIGITS = TM_PREFIX_LEN + TM_MAX_GROUPS * 3; // 22
 function validateTM(tm){
   if(!tm) return {ok:true, msg:'Поле необязательное', empty:true};
   const parts = tm.split('-');
-  if(parts.length !== 7) return {ok:false, msg:`Ожидается 7 групп, получено ${parts.length}`};
-  if(parts[0] !== TM_PREFIX) return {ok:false, msg:`Префикс должен быть ${TM_PREFIX}`};
-  for(let i=1;i<7;i++){ if(!/^\d{3}$/.test(parts[i])) return {ok:false, msg:`Группа ${i} должна быть из 3 цифр`}; }
-  return {ok:true, msg:'Формат корректен'};
+  if(parts.length < 1 || parts.length > TM_MAX_GROUPS + 1){
+    return {ok:false, msg:`Допустимо от 1 до ${TM_MAX_GROUPS + 1} групп`};
+  }
+  if(!/^\d{4}$/.test(parts[0])){
+    return {ok:false, msg:'Префикс должен быть 4 цифры (1201, 1221 и т.п.)'};
+  }
+  for(let i=1;i<parts.length;i++){
+    if(!/^\d{3}$/.test(parts[i])) return {ok:false, msg:`Группа ${i}: ровно 3 цифры`};
+  }
+  return {ok:true, msg:`Формат корректен (${parts.length} ур.)`};
 }
 function autoFormatTM(input){
   let v = input.value.replace(/[^\d]/g,'');
-  if(v.length > 22) v = v.slice(0,22);
+  if(v.length > TM_MAX_DIGITS) v = v.slice(0, TM_MAX_DIGITS);
   let formatted = '';
   if(v.length === 0){ input.value=''; return; }
-  if(v.length <= 4){ formatted = v; }
-  else { formatted = v.slice(0,4); for(let i=4;i<v.length;i+=3){ formatted += '-' + v.slice(i, i+3); } }
+  if(v.length <= TM_PREFIX_LEN){ formatted = v; }
+  else {
+    formatted = v.slice(0, TM_PREFIX_LEN);
+    for(let i = TM_PREFIX_LEN; i < v.length; i += 3){ formatted += '-' + v.slice(i, i + 3); }
+  }
   input.value = formatted;
 }
 
@@ -1053,7 +1066,7 @@ function tabStatistics(){
 
   const html = `
     <div class="bubble-title">📊 Статистика</div>
-    <div class="bubble-sub">Сводные данные по базе нормативов ЭСП</div>
+    <div class="bubble-sub">Сводные данные по базе нормативов ЭСПЦ</div>
     <div class="grid4">
       <div class="tile"><div class="tile-h">Всего нормативов</div><div class="tile-v blue">${norms.length}</div></div>
       <div class="tile"><div class="tile-h">Ср. достоверность</div><div class="tile-v green">${avgConf}%</div></div>
@@ -1064,7 +1077,7 @@ function tabStatistics(){
       <div class="tile"><div class="tile-h">Своих нормативов</div><div class="tile-v">${customCount}</div><div class="tile-d">добавлено вами</div></div>
       <div class="tile"><div class="tile-h">Своих единиц оборудования</div><div class="tile-v">${equipCount}</div><div class="tile-d">добавлено вами</div></div>
     </div>
-    <div class="form-sec-title" style="margin-top:20px">📊 По участкам ЭСП</div>
+    <div class="form-sec-title" style="margin-top:20px">📊 По участкам ЭСПЦ</div>
     ${Object.entries(SECTION_NAMES).map(([k,name])=>{
       const c=bySection[k];
       return `<div class="stat-bar"><div class="stat-bar-h"><span class="stat-bar-name">${name}</span><span class="stat-bar-v">${c}</span></div><div class="stat-bar-track"><div class="stat-bar-fill" style="width:${(c/maxSec)*100}%;background:linear-gradient(90deg,#3b82f6,#8b5cf6)"></div></div></div>`;
@@ -1093,7 +1106,7 @@ function tabAdd(){
       <div class="form-sec-title">📋 Основная информация</div>
       <div class="form-row">
         <div class="form-group"><label class="form-lbl">Код операции *</label><input class="form-inp" name="operationCode" placeholder="ДСП-Н-026" required></div>
-        <div class="form-group"><label class="form-lbl">Участок ЭСП *</label><select class="form-sel" name="section" required>${Object.entries(SECTION_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+        <div class="form-group"><label class="form-lbl">Участок ЭСПЦ *</label><select class="form-sel" name="section" required>${Object.entries(SECTION_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
       </div>
       <div class="form-group"><label class="form-lbl">Наименование операции *</label><input class="form-inp" name="operationName" placeholder="Замена/ремонт..." required></div>
       <div class="form-row">
@@ -1107,8 +1120,8 @@ function tabAdd(){
       <div class="form-sec-title">🏷️ Техническое место (ТМ)</div>
       <div class="form-group">
         <label class="form-lbl">Код ТМ</label>
-        <input class="form-inp tm" name="tm" id="tmInput" placeholder="1201-001-002-003-004-005-006" maxlength="28" autocomplete="off">
-        <div class="form-hint" id="tmHint">Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code></div>
+        <input class="form-inp tm" name="tm" id="tmInput" placeholder="1201-210-010-010" maxlength="28" autocomplete="off">
+<div class="form-hint" id="tmHint">Формат: <code>XXXX</code> или <code>XXXX-XXX</code> … до 7 групп. Пример: <code>1201</code>, <code>1221</code>, <code>1201-210-010</code></div>
       </div>
       <div class="form-sec-title">📐 Норматив</div>
       <div class="form-row">
@@ -1137,13 +1150,13 @@ function tabAdd(){
     tmInp.addEventListener('input', ()=>{
       autoFormatTM(tmInp);
       const v = tmInp.value.trim();
-      if(!v){ tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>'; return; }
+      if(!v){ tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>XXXX</code> или <code>XXXX-XXX</code> … до 7 групп. Пример: <code>1201</code>, <code>1221</code>, <code>1201-210-010</code>';return; }
       const r = validateTM(v);
       if(r.ok){ tmInp.classList.add('ok'); tmInp.classList.remove('err'); tmHint.className='form-hint ok'; tmHint.textContent='✓ '+r.msg; }
       else { tmInp.classList.add('err'); tmInp.classList.remove('ok'); tmHint.className='form-hint err'; tmHint.textContent='✕ '+r.msg; }
     });
     form.querySelector('#addFormReset').onclick = ()=>{
-      form.reset(); tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>'; document.getElementById('addFormWarn').innerHTML='';
+      form.reset(); tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>XXXX</code> или <code>XXXX-XXX</code> … до 7 групп. Пример: <code>1201</code>, <code>1221</code>, <code>1201-210-010</code>'; document.getElementById('addFormWarn').innerHTML='';
     };
     form.onsubmit = e=>{
       e.preventDefault();
@@ -1168,7 +1181,7 @@ function tabAdd(){
       };
       state.custom.push(norm); saveCustom();
       appendMsg(`<div class="bubble-title">✅ Норматив добавлен</div><p>Код: <code>${norm.operationCode}</code></p>`);
-      form.reset(); tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>'; document.getElementById('addFormWarn').innerHTML='';
+      form.reset(); tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>XXXX</code> или <code>XXXX-XXX</code> … до 7 групп. Пример: <code>1201</code>, <code>1221</code>, <code>1201-210-010</code>'; document.getElementById('addFormWarn').innerHTML='';
     };
   });
 }
@@ -1181,14 +1194,13 @@ function tabAddEquip(){
       <div class="form-sec-title">📋 Идентификация</div>
       <div class="form-row">
         <div class="form-group"><label class="form-lbl">Код оборудования *</label><input class="form-inp" name="code" placeholder="ЭКВ-УПС-001" required></div>
-        <div class="form-group"><label class="form-lbl">Участок ЭСП *</label><select class="form-sel" name="section" required>${Object.entries(SECTION_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+        <div class="form-group"><label class="form-lbl">Участок ЭСПЦ *</label><select class="form-sel" name="section" required>${Object.entries(SECTION_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
       </div>
       <div class="form-sec-title">🏷️ Техническое место (ТМ)</div>
       <div class="form-group">
         <label class="form-lbl">Код ТМ</label>
-        <input class="form-inp tm" name="tm" id="tmEqInput" placeholder="1201-001-002-003-004-005-006" maxlength="28" autocomplete="off">
-        <div class="form-hint" id="tmEqHint">Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code></div>
-      </div>
+        <input class="form-inp tm" name="tm" id="tmEqInput" placeholder="1201-210-010-010" maxlength="28" autocomplete="off">
+<div class="form-hint" id="tmEqHint">Формат: <code>XXXX</code> или <code>XXXX-XXX</code> … до 7 групп. Пример: <code>1201</code>, <code>1221</code>, <code>1201-210-010</code></div>
       <div class="form-sec-title">⚙️ Классификация</div>
       <div class="form-row">
         <div class="form-group"><label class="form-lbl">Категория *</label><select class="form-sel" name="category">${Object.entries(CATEGORY_NAMES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
@@ -1211,13 +1223,13 @@ function tabAddEquip(){
     tmInp.addEventListener('input', ()=>{
       autoFormatTM(tmInp);
       const v = tmInp.value.trim();
-      if(!v){ tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>'; return; }
+      if(!v){ tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>XXXX</code> или <code>XXXX-XXX</code> … до 7 групп. Пример: <code>1201</code>, <code>1221</code>, <code>1201-210-010</code>'; return; }
       const r = validateTM(v);
       if(r.ok){ tmInp.classList.add('ok'); tmInp.classList.remove('err'); tmHint.className='form-hint ok'; tmHint.textContent='✓ '+r.msg; }
       else { tmInp.classList.add('err'); tmInp.classList.remove('ok'); tmHint.className='form-hint err'; tmHint.textContent='✕ '+r.msg; }
     });
     form.querySelector('#addEqReset').onclick = ()=>{
-      form.reset(); tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>'; document.getElementById('addEqWarn').innerHTML='';
+      form.reset(); tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>XXXX</code> или <code>XXXX-XXX</code> … до 7 групп. Пример: <code>1201</code>, <code>1221</code>, <code>1201-210-010</code>'; document.getElementById('addEqWarn').innerHTML='';
     };
     form.onsubmit = e=>{
       e.preventDefault();
@@ -1234,7 +1246,7 @@ function tabAddEquip(){
       };
       state.customEquip.push(eq); saveEquip();
       appendMsg(`<div class="bubble-title">✅ Оборудование добавлено</div>`);
-      form.reset(); tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code>'; document.getElementById('addEqWarn').innerHTML='';
+      form.reset(); tmInp.classList.remove('err','ok'); tmHint.className='form-hint'; tmHint.innerHTML='Формат: <code>XXXX</code> или <code>XXXX-XXX</code> … до 7 групп. Пример: <code>1201</code>, <code>1221</code>, <code>1201-210-010</code>'; document.getElementById('addEqWarn').innerHTML='';
     };
   });
 }
@@ -1248,7 +1260,7 @@ function tabEquipment(){
   });
   const html = `
     <div class="bubble-title">⚙️ Оборудование и ТМ</div>
-    <div class="form-sec-title" style="margin-top:14px">🏭 По участкам ЭСП</div>
+    <div class="form-sec-title" style="margin-top:14px">🏭 По участкам ЭСПЦ</div>
     ${Object.entries(eqBySection).map(([sec,data])=>`
       <div class="tile" style="margin-bottom:8px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px">
@@ -1291,7 +1303,7 @@ function tabAbout(){
     <p>Эта <b>ограниченная версия</b> предназначена для первичной работы инженеров.</p>
     <div class="form-sec-title" style="margin-top:16px">🔒 Лицензия</div>
     <div class="tile">
-      <p><b>Продукт:</b> ESP Lite v4.9</p>
+      <p><b>Продукт:</b> ESP Lite V4.10</p>
       <p><b>Лицензия:</b> <code>${g.licenseId||'—'}</code></p>
       <p><b>Водяной знак:</b> <span style="font-family:ui-monospace;font-size:11.5px;color:#93c5fd">${g.watermark||''}</span></p>
     </div>
@@ -1364,7 +1376,7 @@ function tabSettings(){
     
     // Обработчики бэкапа
     document.getElementById('expAll').onclick = ()=>{
-      const data = {_meta:{app:'ESP Lite v4.9', date:new Date().toISOString()}, custom: state.custom, customEquip: state.customEquip, cards: state.cards};
+      const data = {_meta:{app:'ESP Lite V4.10', date:new Date().toISOString()}, custom: state.custom, customEquip: state.customEquip, cards: state.cards};
       downloadFile(`esp_backup_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(data, null, 2), 'application/json');
     };
     document.getElementById('impBtn').onclick = ()=>document.getElementById('impFile').click();
@@ -1436,7 +1448,7 @@ function showAdminResetPasswordModal(login){
   m.innerHTML = '<div class="modal" style="max-width:480px">' +
     '<div class="modal-head"><div class="modal-title">🔑 Сброс пароля</div><button class="modal-close" type="button" data-close>×</button></div>' +
     '<div class="modal-body">' +
-    '<div class="warn-banner info">ℹ️ Вы меняете пароль для пользователя <b>' + Utils.escapeHtml(login) + '</b>.</div>' +
+    '<div class="warn-banner info">ℹ️ Вы меняете пароль для пользователя <b>' + escapeHtml(login) + '</b>.</div>' +
     '<div class="form-group"><label class="form-lbl">Новый пароль (мин. 6 символов) *</label><input class="form-inp" type="password" id="admin-reset-pwd" minlength="6" required></div>' +
     '<div class="form-group"><label class="form-lbl">Повторите пароль *</label><input class="form-inp" type="password" id="admin-reset-pwd2" minlength="6" required></div>' +
     '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px"><button class="btn btn-ghost" type="button" data-close>Отмена</button><button class="btn btn-orange" type="button" id="admin-reset-save">💾 Сменить пароль</button></div>' +
@@ -1525,6 +1537,9 @@ function printCard(card){
   w.document.close();
 }
 
+function escapeHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 function downloadFile(name, content, type){
   const b = new Blob([content], {type:type+';charset=utf-8;'});
   const u = URL.createObjectURL(b);
