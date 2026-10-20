@@ -1341,12 +1341,18 @@ function bindCalcOpsEvents(){
   });
 }
 function bindCalcEvents(){
-  const clr = document.getElementById('calcClear'); if(clr) clr.onclick = () => { state.calc = []; refreshCalcOps(); refreshCalcSidebar(); };
+  const clr = document.getElementById('calcClear'); 
+  if(clr) clr.onclick = () => { 
+    state.calc = []; 
+    Storage.set('autosave_calc', state.calc); // Мгновенное сохранение пустого массива
+    refreshCalcOps(); 
+    refreshCalcSidebar(); 
+  };
   const crt = document.getElementById('calcCreate'); if(crt) crt.onclick = showCreateCardModal;
   const exp = document.getElementById('calcExport'); if(exp) exp.onclick = exportCsv;
-  document.querySelectorAll('#calcSidebar [data-qm]').forEach(b => b.onclick = () => { const it = state.calc.find(c => c.norm.id === b.dataset.qm); if(it && it.qty > 1) it.qty--; refreshCalcOps(); refreshCalcSidebar(); });
-  document.querySelectorAll('#calcSidebar [data-qp]').forEach(b => b.onclick = () => { const it = state.calc.find(c => c.norm.id === b.dataset.qp); if(it) it.qty++; refreshCalcOps(); refreshCalcSidebar(); });
-  document.querySelectorAll('#calcSidebar [data-rm]').forEach(b => b.onclick = () => { state.calc = state.calc.filter(c => c.norm.id !== b.dataset.rm); refreshCalcOps(); refreshCalcSidebar(); });
+  document.querySelectorAll('#calcSidebar [data-qm]').forEach(b => b.onclick = () => { const it = state.calc.find(c => c.norm.id === b.dataset.qm); if(it && it.qty > 1) it.qty--; Storage.set('autosave_calc', state.calc); refreshCalcOps(); refreshCalcSidebar(); });
+  document.querySelectorAll('#calcSidebar [data-qp]').forEach(b => b.onclick = () => { const it = state.calc.find(c => c.norm.id === b.dataset.qp); if(it) it.qty++; Storage.set('autosave_calc', state.calc); refreshCalcOps(); refreshCalcSidebar(); });
+  document.querySelectorAll('#calcSidebar [data-rm]').forEach(b => b.onclick = () => { state.calc = state.calc.filter(c => c.norm.id !== b.dataset.rm); Storage.set('autosave_calc', state.calc); refreshCalcOps(); refreshCalcSidebar(); });
 }
 
 /* ═══ ТЕХ. КАРТЫ ═══ */
