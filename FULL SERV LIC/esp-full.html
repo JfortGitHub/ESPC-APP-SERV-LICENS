@@ -1097,7 +1097,18 @@ const { SECTION_NAMES, CATEGORY_NAMES, SOURCE_NAMES, REPAIR_NAMES, ROLE_NAMES } 
 // ═══ STATE (все поля сразу — патчи уже интегрированы) ═══
 const state = {
   tab:'overview-full', search:'', fSection:'', fCat:'', fRep:'', fSrc:'',
-  calc:[], cards: Storage.get('cards', []),
+  calc: (() => {
+    try {
+      const saved = Storage.get('autosave_calc');
+      if (Array.isArray(saved)) {
+        const valid = saved.filter(item => item && item.norm && item.norm.id);
+        console.log('[ESP] Восстановлено из автосохранения:', valid.length, 'операций');
+        return valid;
+      }
+    } catch(e) {}
+    return [];
+  })(),
+  cards: Storage.get('cards', []),
   custom: Storage.get('custom', []),
   customEquip: Storage.get('equip', []),
   calcSearch:'', importTab:'norms', workflowFilter:'all',
@@ -1947,6 +1958,15 @@ document.querySelectorAll('.login-account').forEach(el => {
   if(Auth.currentSession()) showApp();
   else showLogin();
 })();
+
+// ═══ АВТОСОХРАНЕНИЕ КАЛЬКУЛЯТОРА (каждые 30 сек) ═══
+setInterval(() => {
+  if (state.calc && state.calc.length >= 0) {
+    Storage.set('autosave_calc', state.calc);
+    // Для отладки можно раскомментировать строку ниже:
+    // console.log('Автосохранение выполнено:', state.calc.length);
+  }
+}, 30000);
 </script>
 <script>
 if ('serviceWorker' in navigator) {
