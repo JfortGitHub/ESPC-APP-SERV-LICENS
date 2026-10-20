@@ -1582,7 +1582,9 @@ document.getElementById('loginForm').onsubmit = async e=>{
   const login = document.getElementById('loginInput').value.trim();
   const pwd = document.getElementById('passwordInput').value;
   const ok = await tryLogin(login, pwd);
-  if(ok){ showApp(); } else {
+  if(ok){ 
+    showApp(); 
+  } else {
     const err = document.getElementById('loginError');
     err.classList.add('show');
     document.getElementById('passwordInput').value='';
@@ -1590,10 +1592,23 @@ document.getElementById('loginForm').onsubmit = async e=>{
   }
 };
 
-(// ═══ АВТОСОХРАНЕНИЕ КАЛЬКУЛЯТОРА ═══
+(async ()=>{
+  try{ 
+    await migratePasswords(); 
+  }catch(e){ 
+    console.error(e); 
+  }
+  if(restoreSession()){ 
+    showApp(); 
+  } else { 
+    showLogin(); 
+  }
+})();
+
+// ═══ АВТОСОХРАНЕНИЕ КАЛЬКУЛЯТОРА ═══
 setInterval(() => {
   if (state.calc && state.calc.length >= 0) {
-    Storage.set('autosave_calc', state.calc);
+    localStorage.setItem('esp_autosave_calc', JSON.stringify(state.calc));
   }
 }, 30000);
 </script>
