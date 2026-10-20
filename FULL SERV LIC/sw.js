@@ -1,10 +1,13 @@
-const CACHE_NAME = 'esp-cache-v1';
-// Список файлов для кэширования (относительные пути от корня репозитория)
+// Меняем версию кэша, чтобы браузер сбросил старые файлы и скачал новые
+const CACHE_NAME = 'esp-cache-v4.10'; 
 const URLS_TO_CACHE = [
   './',
   './index.html',
   './esp-full.html',
-  './esp-lite.html'
+  './esp-lite.html',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 // Установка: кэшируем файлы
