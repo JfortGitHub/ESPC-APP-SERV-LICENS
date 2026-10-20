@@ -1003,21 +1003,29 @@ function bindCalcOpsEvents(){
 }
 function bindCalcEvents(){
   const clr = document.getElementById('calcClear');
-  if(clr) clr.onclick = ()=>{ state.calc=[]; refreshCalcOps(); refreshCalcSidebar(); };
+  if(clr) clr.onclick = ()=>{ 
+    state.calc=[]; 
+    localStorage.setItem('esp_autosave_calc', JSON.stringify(state.calc)); // Мгновенное сохранение
+    refreshCalcOps(); 
+    refreshCalcSidebar(); 
+  };
   const crt = document.getElementById('calcCreate');
   if(crt) crt.onclick = showCreateCardModal;
   const exp = document.getElementById('calcExport');
   if(exp) exp.onclick = exportCsv;
   document.querySelectorAll('#calcSidebar [data-qm]').forEach(b=>b.onclick=()=>{
     const it=state.calc.find(c=>c.norm.id===b.dataset.qm); if(it&&it.qty>1) it.qty--;
+    localStorage.setItem('esp_autosave_calc', JSON.stringify(state.calc));
     refreshCalcOps(); refreshCalcSidebar();
   });
   document.querySelectorAll('#calcSidebar [data-qp]').forEach(b=>b.onclick=()=>{
     const it=state.calc.find(c=>c.norm.id===b.dataset.qp); if(it) it.qty++;
+    localStorage.setItem('esp_autosave_calc', JSON.stringify(state.calc));
     refreshCalcOps(); refreshCalcSidebar();
   });
   document.querySelectorAll('#calcSidebar [data-rm]').forEach(b=>b.onclick=()=>{
     state.calc = state.calc.filter(c=>c.norm.id!==b.dataset.rm);
+    localStorage.setItem('esp_autosave_calc', JSON.stringify(state.calc));
     refreshCalcOps(); refreshCalcSidebar();
   });
 }
