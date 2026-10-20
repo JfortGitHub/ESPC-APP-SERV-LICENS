@@ -724,7 +724,20 @@ function autoFormatTM(input){
 
 const state = {
   tab:'normatives', search:'', fSection:'', fCat:'', fRep:'', fSrc:'',
-  calc:[], cards: Array.isArray(JSON.parse(localStorage.getItem('esp_cards')||'[]')) ? JSON.parse(localStorage.getItem('esp_cards')||'[]') : [],
+  calc: (() => {
+    try {
+      const saved = localStorage.getItem('esp_autosave_calc');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(item => item && item.norm && item.norm.id);
+        }
+      }
+    } catch(e) {}
+    return [];
+  })(),
+  cards: Array.isArray(JSON.parse(localStorage.getItem('esp_cards')||'[]')) ? JSON.parse(localStorage.getItem('esp_cards')||'[]') : [],
+
   custom: Array.isArray(JSON.parse(localStorage.getItem('esp_custom')||'[]')) ? JSON.parse(localStorage.getItem('esp_custom')||'[]') : [],
   customEquip: Array.isArray(JSON.parse(localStorage.getItem('esp_equip')||'[]')) ? JSON.parse(localStorage.getItem('esp_equip')||'[]') : [],
   calcSearch:''
@@ -1577,10 +1590,12 @@ document.getElementById('loginForm').onsubmit = async e=>{
   }
 };
 
-(async ()=>{
-  try{ await migratePasswords(); }catch(e){ console.error(e); }
-  if(restoreSession()){ showApp(); } else { showLogin(); }
-})();
+(// ═══ АВТОСОХРАНЕНИЕ КАЛЬКУЛЯТОРА ═══
+setInterval(() => {
+  if (state.calc && state.calc.length >= 0) {
+    Storage.set('autosave_calc', state.calc);
+  }
+}, 30000);
 </script>
 <script>
 if ('serviceWorker' in navigator) {
