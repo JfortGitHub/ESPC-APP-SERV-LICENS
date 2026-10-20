@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Нормативы ЭСПЦ — Портал</title>
+    <link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#111827">
+<link rel="apple-touch-icon" href="./icon-192.png">
     <style>
         :root {
             --bg: #0f172a; --panel: #1e293b; --border: #334155;
@@ -85,5 +88,19 @@
             <p style="margin-top: 8px;">Репозиторий: <a href="https://github.com/JfortGitHub/ESPC-APP-SERV-LICENS" target="_blank">GitHub</a></p>
         </div>
     </div>
+    <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    // Регистрируем с относительным путем и scope для GitHub Pages
+    navigator.serviceWorker.register('./sw.js', { scope: './' })
+      .then((registration) => {
+        console.log('[PWA] Service Worker зарегистрирован:', registration.scope);
+      })
+      .catch((error) => {
+        console.warn('[PWA] Ошибка регистрации Service Worker:', error);
+      });
+  });
+}
+</script>
 </body>
 </html>
