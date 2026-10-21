@@ -999,7 +999,10 @@ function bindCalcOpsEvents(){
     b.onclick=()=>{
       const id=b.dataset.calcAdd;
       const norm=allNorms().find(n=>n.id===id);
-      if(!state.calc.find(c=>c.norm.id===id)) state.calc.push({norm,qty:1});
+      if(!state.calc.find(c=>c.norm.id===id)) {
+        state.calc.push({norm,qty:1});
+        localStorage.setItem('esp_autosave_calc', JSON.stringify(state.calc)); // Мгновенное сохранение
+      }
       refreshCalcOps(); refreshCalcSidebar();
     };
   });
