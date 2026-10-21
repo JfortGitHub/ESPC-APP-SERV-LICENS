@@ -888,10 +888,13 @@ function attachNormEvents(){
 }
 function bindNormAddButtons(){
   document.querySelectorAll('#normsListBox [data-norm-add]').forEach(b=>{
-    b.onclick=()=>{
+   b.onclick=()=>{
       const id=b.dataset.normAdd;
       const norm=allNorms().find(n=>n.id===id);
-      if(!state.calc.find(c=>c.norm.id===id)) state.calc.push({norm,qty:1});
+      if(!state.calc.find(c=>c.norm.id===id)) {
+        state.calc.push({norm,qty:1});
+        localStorage.setItem('esp_autosave_calc', JSON.stringify(state.calc)); // Мгновенное сохранение
+      }
       b.className='btn btn-success btn-xs';
       b.textContent='✓ В расчёте';
     };
