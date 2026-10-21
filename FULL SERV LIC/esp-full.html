@@ -718,6 +718,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
       return {ok:true};
     }
         return { login, logout, currentSession, hasRole, isAdmin, isEngineer, listUsers, getRawUsers, addUser, removeUser, changePassword, adminResetPassword, migratePasswords, isHashed, ROLES };
+  })();
   const Dedup = (() => {
     function normalize(s){ return String(s||'').toLowerCase().trim().replace(/ё/g,'е').replace(/\s+/g,' ').replace(/[^\wа-я0-9 ]/gi,''); }
     function lev(a, b){
