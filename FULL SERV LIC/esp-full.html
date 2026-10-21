@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Нормативы ЭСПЦ — Full V4.17</title>
+<title>Нормативы ЭСПЦ — Full V4.20</title>
 <meta name="author" content="ЭСПЦ">
 <meta name="copyright" content="© 2024–2026 ЭСПЦ. Все права защищены.">
 <meta name="license" content="ESP-PRO-2026-0001">
@@ -14,7 +14,7 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <!--
-  ESP Full V4.17 — проприетарное ПО.
+  ESP Full V4.20 — проприетарное ПО.
   © 2024–2026 ЭСПЦ. Все права защищены. Лицензия: ESP-PRO-2026-0001.
   Копирование и распространение без разрешения запрещены.
 -->
@@ -397,7 +397,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
 <script>
 (function(global){
   'use strict';
-  const PRODUCT = 'ESP Full V4.17';
+  const PRODUCT = 'ESP Full V4.20';
   const OWNER = 'FEDORTSOVOP';
   const LICENSE_ID = 'ESP-PRO-2026-0001';
   const COPYRIGHT = '© 2024–2026 ЭСПЦ · Все права защищены';
@@ -500,7 +500,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
   <form class="login-box" id="loginForm" autocomplete="off">
     <div class="login-logo">🔬</div>
     <h2>Нормативы ЭСПЦ</h2>
-    <div class="sub">Расширенная версия · <b>Full V4.17</b></div>
+    <div class="sub">Расширенная версия · <b>Full V4.20</b></div>
     <div class="login-error" id="loginError">Неверный логин или пароль</div>
     <div class="login-field"><label>Логин</label><input name="login" id="loginInput" placeholder="Введите логин" required autocomplete="username" autocapitalize="off" spellcheck="false"></div>
     <div class="login-field"><label>Пароль</label><input name="password" id="passwordInput" type="password" placeholder="Введите пароль" required autocomplete="current-password"></div>
@@ -518,16 +518,16 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
 
 <div class="app hidden" id="app">
   <aside class="sidebar" id="sidebar">
-    <div class="brand"><div class="brand-icon">🔬</div><div class="brand-text"><h1>Нормативы ЭСПЦ</h1><p>Full V4.17 · Профессиональный</p></div></div>
+    <div class="brand"><div class="brand-icon">🔬</div><div class="brand-text"><h1>Нормативы ЭСПЦ</h1><p>Full V4.20 · Профессиональный</p></div></div>
     <div class="nav-scroll" id="navScroll"></div>
-    <div class="sidebar-footer">ЭСПЦ © 2024–2026 · V4.17 <span class="ver">Full</span></div>
+    <div class="sidebar-footer">ЭСПЦ © 2024–2026 · V4.20 <span class="ver">Full</span></div>
   </aside>
   <main class="main">
     <div class="topbar">
       <div class="topbar-title">
         <span class="dot"></span>
         <span id="topbarTitle">Обзор Full</span>
-        <span class="badge-version" id="versionBadge">Full V4.17</span>
+        <span class="badge-version" id="versionBadge">Full V4.20</span>
       </div>
       <div class="topbar-actions">
         <button class="btn btn-ico mob-toggle" type="button" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
@@ -1060,7 +1060,7 @@ const BASE_NORMS = N_RAW.map(r => ({
   function hasCyr(s){return /[а-яё]/i.test(String(s||''));}
   function safeText(s,doc){const t=String(s==null?'':s); return (doc&&doc.__useTranslit&&hasCyr(t))?translit(t):t;}
   function setFont(doc,style='normal'){doc.setFont(doc.__useTranslit?'helvetica':'Roboto',style);}
-  function addHeader(doc,title,sub){ const w=doc.internal.pageSize.getWidth(); doc.setFillColor(30,58,138); doc.rect(0,0,w,22,'F'); doc.setFillColor(79,70,229); doc.rect(0,22,w,2,'F'); doc.setTextColor(255,255,255); setFont(doc,'bold'); doc.setFontSize(14); doc.text(safeText(title,doc),12,11); setFont(doc,'normal'); doc.setFontSize(9); doc.setTextColor(200,210,230); doc.text(safeText(sub,doc),12,17); doc.setFontSize(8); doc.text(safeText(new Date().toLocaleString('ru-RU'),doc),w-12,11,{align:'right'}); doc.text('Full V4.17',w-12,17,{align:'right'}); return 28; }
+  function addHeader(doc,title,sub){ const w=doc.internal.pageSize.getWidth(); doc.setFillColor(30,58,138); doc.rect(0,0,w,22,'F'); doc.setFillColor(79,70,229); doc.rect(0,22,w,2,'F'); doc.setTextColor(255,255,255); setFont(doc,'bold'); doc.setFontSize(14); doc.text(safeText(title,doc),12,11); setFont(doc,'normal'); doc.setFontSize(9); doc.setTextColor(200,210,230); doc.text(safeText(sub,doc),12,17); doc.setFontSize(8); doc.text(safeText(new Date().toLocaleString('ru-RU'),doc),w-12,11,{align:'right'}); doc.text('Full V4.20',w-12,17,{align:'right'}); return 28; }
   function addFooters(doc){ const p=doc.internal.getNumberOfPages(); const w=doc.internal.pageSize.getWidth(),h=doc.internal.pageSize.getHeight(); for(let i=1;i<=p;i++){ doc.setPage(i); doc.setDrawColor(200,210,220); doc.setLineWidth(0.3); doc.line(12,h-12,w-12,h-12); setFont(doc,'normal'); doc.setFontSize(7.5); doc.setTextColor(120,130,140); doc.text(safeText('Система нормативов ЭСПЦ',doc),12,h-7); doc.text(safeText('Автор: '+(Auth.currentSession()?.login||'?'),doc),w/2,h-7,{align:'center'}); doc.text(safeText('Стр. '+i+' из '+p,doc),w-12,h-7,{align:'right'}); } }
   function buildFilename(p,ext='pdf'){return p+'_'+new Date().toISOString().slice(0,10)+'.'+ext;}
   async function exportAllVersionsPDF(){ if(!isAvailable())return {ok:false,msg:'jsPDF не загружен'}; await prepareFont(); const norms=typeof allNorms==='function'?allNorms():[]; const nwv=norms.map(n=>({norm:n,versions:ESP.Plugins.call('versions','getVersions',n.id)})).filter(x=>x.versions.length); if(!nwv.length)return {ok:false,msg:'Нет данных'}; const doc=await createDoc('landscape'); const STATUSES=ESP.Plugins.call('workflow','STATUSES'); const FONT=doc.__useTranslit?'helvetica':'Roboto'; let y=addHeader(doc,'СВОДНЫЙ ОТЧЁТ ПО ВЕРСИЯМ','Нормативов: '+nwv.length); const data=nwv.map(({norm,versions})=>{const latest=versions[versions.length-1]; const approved=versions.filter(v=>v._statusSnapshot==='approved'); const st=ESP.Plugins.call('workflow','getState',norm.id); return [norm.operationCode,norm.operationName,ESP.DICT.SECTION_NAMES[norm.section]||norm.section,norm.normValue+'',versions.length+'',approved.length+'',STATUSES[st.status]?.name||st.status,'v'+latest._versionNumber,new Date(latest._versionAt).toLocaleDateString('ru-RU'),latest._versionBy||'—'];}); doc.autoTable({startY:y,head:[['Код','Наименование','Участок','Ч/ч','Версий','Утв.','Статус','Послед.','Дата','Автор']],body:data,styles:{font:FONT,fontSize:7,cellPadding:1.5,textColor:[51,65,85]},headStyles:{fillColor:[30,58,138],textColor:[255,255,255],fontSize:7.5,fontStyle:'bold',font:FONT},alternateRowStyles:{fillColor:[248,250,252]}}); addFooters(doc); const fn=buildFilename('all_versions'); doc.save(fn); return {ok:true,filename:fn,pages:doc.internal.getNumberOfPages(),cyrillic:!doc.__useTranslit}; }
@@ -1782,7 +1782,7 @@ function tabOverviewFull(){
     {id:'versions', ico:'🔖', title:'Версионирование', status:'ready', desc:'Diff, откат, автосоздание.'},
     {id:'analytics', ico:'📈', title:'Аналитика', status:'ready', desc:'Сводные отчёты.'}
   ];
-  appendMsg('<div class="bubble-title">🔬 Full V4.17</div><div class="bubble-sub">11 плагинов</div><div class="grid4" style="margin-top:14px"><div class="tile"><div class="tile-h">Версия</div><div class="tile-v orange">Full V4.17</div></div><div class="tile"><div class="tile-h">Плагинов</div><div class="tile-v blue">' + Plugins.list().length + '</div></div><div class="tile"><div class="tile-h">Нормативов</div><div class="tile-v green">' + allNorms().length + '</div></div><div class="tile"><div class="tile-h">dedup</div><div class="tile-v yellow">HARD</div></div></div><div class="form-sec-title" style="margin-top:20px">📦 Модули</div><div class="grid2">' + modules.map(m => '<div class="module-card ' + m.status + '" data-goto="' + m.id + '"><div class="module-card-head"><div class="module-card-icon">' + m.ico + '</div><div style="flex:1"><div class="module-card-title">' + m.title + '</div><span class="module-card-status ' + m.status + '">Готово</span></div></div><div class="module-card-desc">' + m.desc + '</div></div>').join('') + '</div><div class="form-sec-title" style="margin-top:20px">🔌 Плагины</div><div style="display:flex;flex-wrap:wrap;gap:6px">' + Plugins.list().map(p => '<span class="chip chip-green">' + p + '</span>').join('') + '</div>').then(() => { document.querySelectorAll('[data-goto]').forEach(el => el.onclick = () => { state.tab = el.dataset.goto; renderNav(); renderChat(); }); });
+  appendMsg('<div class="bubble-title">🔬 Full V4.20</div><div class="bubble-sub">11 плагинов</div><div class="grid4" style="margin-top:14px"><div class="tile"><div class="tile-h">Версия</div><div class="tile-v orange">Full V4.20</div></div><div class="tile"><div class="tile-h">Плагинов</div><div class="tile-v blue">' + Plugins.list().length + '</div></div><div class="tile"><div class="tile-h">Нормативов</div><div class="tile-v green">' + allNorms().length + '</div></div><div class="tile"><div class="tile-h">dedup</div><div class="tile-v yellow">HARD</div></div></div><div class="form-sec-title" style="margin-top:20px">📦 Модули</div><div class="grid2">' + modules.map(m => '<div class="module-card ' + m.status + '" data-goto="' + m.id + '"><div class="module-card-head"><div class="module-card-icon">' + m.ico + '</div><div style="flex:1"><div class="module-card-title">' + m.title + '</div><span class="module-card-status ' + m.status + '">Готово</span></div></div><div class="module-card-desc">' + m.desc + '</div></div>').join('') + '</div><div class="form-sec-title" style="margin-top:20px">🔌 Плагины</div><div style="display:flex;flex-wrap:wrap;gap:6px">' + Plugins.list().map(p => '<span class="chip chip-green">' + p + '</span>').join('') + '</div>').then(() => { document.querySelectorAll('[data-goto]').forEach(el => el.onclick = () => { state.tab = el.dataset.goto; renderNav(); renderChat(); }); });
 }
 
 /* ═══ АНАЛИТИКА ═══ */
@@ -1881,7 +1881,7 @@ function tabSettings(){
     };
     document.getElementById('expAll').onclick = ()=>{
       const data = {
-        _meta:{app:'ESP Full V4.17', exportedAt:new Date().toISOString(), exportedBy:s?.login},
+        _meta:{app:'ESP Full V4.20', exportedAt:new Date().toISOString(), exportedBy:s?.login},
         custom: state.custom, customEquip: state.customEquip, cards: state.cards
       };
       Utils.download(`esp_backup_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(data, null, 2), 'application/json');
@@ -2005,7 +2005,7 @@ function showAdminResetPasswordModal(login){
 /* ═══ ABOUT ═══ */
 function tabAbout(){
   const s = Auth.currentSession();
-  appendMsg('<div class="bubble-title">ℹ️ О версии Full V4.17</div><p>Профессиональный инструмент нормировщика.</p><div class="form-sec-title">📦 Конфигурация</div><div class="grid4"><div class="tile"><div class="tile-h">Версия</div><div class="tile-v orange">V4.17</div></div><div class="tile"><div class="tile-h">Ядро</div><div class="tile-v purple" style="font-size:13px">ESP v' + ESP.version + '</div></div><div class="tile"><div class="tile-h">Плагинов</div><div class="tile-v green">' + Plugins.list().length + '</div></div><div class="tile"><div class="tile-h">Нормативов</div><div class="tile-v blue">' + allNorms().length + '</div></div></div><div class="form-sec-title">🛡️ Лицензия</div><div class="tile" style="border-color:rgba(234,88,12,.45)"><div style="font-family:monospace;font-size:12px;color:#fdba74">' + ESP_GUARD.licenseId + '</div><div style="color:#fff;font-weight:700;margin-top:4px">' + ESP_GUARD.product + '</div><div style="color:var(--muted);font-size:11.5px;margin-top:8px">Правообладатель: <b style="color:#fff">' + ESP_GUARD.owner + '</b><br>Водяной знак: <code>' + ESP_GUARD.watermark + '</code></div></div><div class="form-sec-title">🔌 Плагины (' + Plugins.list().length + ')</div><div style="display:flex;flex-wrap:wrap;gap:6px">' + Plugins.list().map(p => '<span class="chip chip-green">' + Utils.escapeHtml(p) + '</span>').join('') + '</div><div class="form-sec-title">👤 Пользователь</div><div class="tile"><div style="color:#fff;font-weight:700">' + Utils.escapeHtml(s?.name||'—') + '</div><span class="badge-role ' + (s?.role||'user') + '">' + ROLE_NAMES[s?.role||'user'] + '</span></div>');
+  appendMsg('<div class="bubble-title">ℹ️ О версии Full V4.20</div><p>Профессиональный инструмент нормировщика.</p><div class="form-sec-title">📦 Конфигурация</div><div class="grid4"><div class="tile"><div class="tile-h">Версия</div><div class="tile-v orange">V4.20</div></div><div class="tile"><div class="tile-h">Ядро</div><div class="tile-v purple" style="font-size:13px">ESP v' + ESP.version + '</div></div><div class="tile"><div class="tile-h">Плагинов</div><div class="tile-v green">' + Plugins.list().length + '</div></div><div class="tile"><div class="tile-h">Нормативов</div><div class="tile-v blue">' + allNorms().length + '</div></div></div><div class="form-sec-title">🛡️ Лицензия</div><div class="tile" style="border-color:rgba(234,88,12,.45)"><div style="font-family:monospace;font-size:12px;color:#fdba74">' + ESP_GUARD.licenseId + '</div><div style="color:#fff;font-weight:700;margin-top:4px">' + ESP_GUARD.product + '</div><div style="color:var(--muted);font-size:11.5px;margin-top:8px">Правообладатель: <b style="color:#fff">' + ESP_GUARD.owner + '</b><br>Водяной знак: <code>' + ESP_GUARD.watermark + '</code></div></div><div class="form-sec-title">🔌 Плагины (' + Plugins.list().length + ')</div><div style="display:flex;flex-wrap:wrap;gap:6px">' + Plugins.list().map(p => '<span class="chip chip-green">' + Utils.escapeHtml(p) + '</span>').join('') + '</div><div class="form-sec-title">👤 Пользователь</div><div class="tile"><div style="color:#fff;font-weight:700">' + Utils.escapeHtml(s?.name||'—') + '</div><span class="badge-role ' + (s?.role||'user') + '">' + ROLE_NAMES[s?.role||'user'] + '</span></div>');
 }
 
 /* ═══ МОДАЛКИ ═══ */
@@ -2075,13 +2075,13 @@ try{
   const _baseline = ESP_GUARD.integrityHash();
   ESP_GUARD.startIntegrityCheck(_baseline, () => { console.warn('[ESP] Обнаружено изменение ядра'); });
   ESP_GUARD.startAntiDebug(
-    () => console.info('%cESP Full V4.17 · ' + ESP_GUARD.licenseId + ' · WM: ' + ESP_GUARD.watermark, 'color:#fb923c;font-weight:bold'),
+    () => console.info('%cESP Full V4.20 · ' + ESP_GUARD.licenseId + ' · WM: ' + ESP_GUARD.watermark, 'color:#fb923c;font-weight:bold'),
     null
   );
 }catch(e){}
 
 try{
-  document.querySelector('.sidebar-footer').innerHTML = 'ЭСПЦ © 2024–2026 · V4.17 <span class="ver">Full</span> · <span style="opacity:.55;font-family:monospace;font-size:9.5px">' + ESP_GUARD.watermark + '</span>';
+  document.querySelector('.sidebar-footer').innerHTML = 'ЭСПЦ © 2024–2026 · V4.20 <span class="ver">Full</span> · <span style="opacity:.55;font-family:monospace;font-size:9.5px">' + ESP_GUARD.watermark + '</span>';
 }catch(e){}
 
 document.getElementById('loginForm').onsubmit = async e => {
