@@ -1290,7 +1290,10 @@ function bindNormAddButtons(){
     b.onclick = () => {
       const id = b.dataset.normAdd;
       const norm = allNorms().find(n => n.id === id);
-      if(!state.calc.find(c => c.norm.id === id)) state.calc.push({norm, qty:1});
+      if(!state.calc.find(c => c.norm.id === id)) {
+        state.calc.push({norm, qty:1});
+        Storage.set('autosave_calc', state.calc); // <--- МГНОВЕННОЕ СОХРАНЕНИЕ
+      }
       b.className = 'btn btn-success btn-xs'; b.textContent = '✓ В расчёте';
     };
   });
