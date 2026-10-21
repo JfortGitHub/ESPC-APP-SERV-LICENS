@@ -1340,7 +1340,16 @@ function refreshCalcOps(){ const box = document.getElementById('calcOpsBox'); if
 function refreshCalcSidebar(){ const sb = document.getElementById('calcSidebar'); if(sb){ sb.innerHTML = renderCalcSidebar(); bindCalcEvents(); } }
 function bindCalcOpsEvents(){
   document.querySelectorAll('#calcOpsBox [data-calc-add]').forEach(b => {
-    b.onclick = () => { const id = b.dataset.calcAdd; const norm = allNorms().find(n => n.id === id); if(!state.calc.find(c => c.norm.id === id)) state.calc.push({norm, qty:1}); refreshCalcOps(); refreshCalcSidebar(); };
+    b.onclick = () => { 
+      const id = b.dataset.calcAdd; 
+      const norm = allNorms().find(n => n.id === id); 
+      if(!state.calc.find(c => c.norm.id === id)) {
+        state.calc.push({norm, qty:1}); 
+        Storage.set('autosave_calc', state.calc); // <--- МГНОВЕННОЕ СОХРАНЕНИЕ
+      }
+      refreshCalcOps(); 
+      refreshCalcSidebar(); 
+    };
   });
 }
 function bindCalcEvents(){
