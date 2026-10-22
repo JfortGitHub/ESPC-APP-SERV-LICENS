@@ -508,9 +508,9 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
     <div class="login-hint">
       Демо-доступы (нажмите для подстановки):
       <div class="login-accounts">
-        <div class="login-account" data-login="admin" data-pwd="admin123"><div class="role">Админ</div><div class="login-name">admin</div></div>
-        <div class="login-account" data-login="engineer" data-pwd="eng123"><div class="role">Инженер</div><div class="login-name">engineer</div></div>
-        <div class="login-account" data-login="user" data-pwd="user123"><div class="role">Польз.</div><div class="login-name">user</div></div>
+        <div class="login-account" onclick="document.getElementById('loginInput').value='admin';document.getElementById('passwordInput').value='admin123';document.getElementById('loginError').classList.remove('show');"><div class="role">Админ</div><div class="login-name">admin</div></div>
+        <div class="login-account" onclick="document.getElementById('loginInput').value='engineer';document.getElementById('passwordInput').value='eng123';document.getElementById('loginError').classList.remove('show');"><div class="role">Инженер</div><div class="login-name">engineer</div></div>
+        <div class="login-account" onclick="document.getElementById('loginInput').value='user';document.getElementById('passwordInput').value='user123';document.getElementById('loginError').classList.remove('show');"><div class="role">Польз.</div><div class="login-name">user</div></div>
       </div>
     </div>
   </form>
@@ -678,7 +678,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
     function isAdmin(){ return hasRole('admin'); }
     function isEngineer(){ return hasRole('engineer'); }
     function listUsers(){ return loadUsers().map(u=>({login:u.login, name:u.name, role:u.role, createdAt:u.createdAt})); }
-	function getRawUsers(){ return loadUsers(); }
+    function getRawUsers(){ return loadUsers(); }
     async function addUser({login, name, password, role}){
       if(!login || !name || !password || !role) return {ok:false, msg:'Все поля обязательны'};
       if(!/^[a-zA-Z0-9_]{3,20}$/.test(login)) return {ok:false, msg:'Логин: 3-20 символов'};
@@ -717,7 +717,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
       saveUsers(users);
       return {ok:true};
     }
-        return { login, logout, currentSession, hasRole, isAdmin, isEngineer, listUsers, getRawUsers, addUser, removeUser, changePassword, adminResetPassword, migratePasswords, isHashed, ROLES };
+    return { login, logout, currentSession, hasRole, isAdmin, isEngineer, listUsers, getRawUsers, addUser, removeUser, changePassword, adminResetPassword, migratePasswords, isHashed, ROLES };
   })();
   const Dedup = (() => {
     function normalize(s){ return String(s||'').toLowerCase().trim().replace(/ё/g,'е').replace(/\s+/g,' ').replace(/[^\wа-я0-9 ]/gi,''); }
@@ -1230,7 +1230,7 @@ function renderNav(){
   const groups = buildNav();
   const role = Auth.currentSession()?.role || 'user';
   nav.innerHTML = groups.map(g => '<div class="nav-section"><div class="nav-section-title ' + (g.group.includes('Full')?'full':'') + '">' + g.group + '</div>' + g.items.map(it => { const disabled = it.adminOnly && role !== 'admin'; return '<div class="nav-item' + (state.tab===it.id?' active':'') + (it.full?' full-only':'') + (disabled?' admin-only':'') + '" ' + (disabled?'':'data-nav="'+it.id+'"') + '><span class="ico">' + it.ico + '</span><span>' + it.label + '</span>' + (it.badge?'<span class="badge-n">'+it.badge+'</span>':'') + '</div>'; }).join('') + '</div>').join('');
-  nav.querySelectorAll('[data-nav]').forEach(el => { el.onclick = () => { state.tab = el.dataset.nav; document.getElementById('sidebar').classList.remove('open'); renderNav(); renderChat(); }; });
+  nav.querySelectorAll('[data-nav]').forEach(el => { el.onclick = () => { state.tab = el.dataset.nav; state.editingNormId = null; state.editingEquipId = null; document.getElementById('sidebar').classList.remove('open'); renderNav(); renderChat(); }; });
 }
 function appendMsg(html, delay=0){
   return new Promise(res => {
@@ -1310,9 +1310,8 @@ function bindNormAddButtons(){
       renderNav(); renderChat();
     };
   });
-}
-
-document.querySelectorAll('#normsListBox [data-norm-edit]').forEach(b => {
+  // ⬇️ ОБРАБОТЧИК РЕДАКТИРОВАНИЯ ⬇️
+  document.querySelectorAll('#normsListBox [data-norm-edit]').forEach(b => {
     b.onclick = (e) => {
       e.stopPropagation();
       state.editingNormId = b.dataset.normEdit;
@@ -1320,6 +1319,7 @@ document.querySelectorAll('#normsListBox [data-norm-edit]').forEach(b => {
       renderNav(); renderChat();
     };
   });
+}
 function refreshNormsList(){
   const box = document.getElementById('normsListBox');
   if(box){ box.innerHTML = renderNormsList(getFiltered()); bindNormAddButtons(); }
@@ -1406,12 +1406,12 @@ function tabStatistics(){
 /* ═══ ФОРМА НОРМАТИВА ═══ */
 function tabAdd(){
   const isEdit = !!state.editingNormId;
-appendMsg('<div class="bubble-title">' + (isEdit ? '✏️ Редактировать норматив' : '➕ Добавить норматив') + '</div><div class="bubble-sub">HARD-дедупликация</div><div id="addFormWarn"></div><form id="addForm"><div class="form-sec-title">📋 Основная</div><div class="form-row"><div class="form-group"><label class="form-lbl">Код *</label><input class="form-inp" name="operationCode" required autocapitalize="characters" spellcheck="false"></div><div class="form-group"><label class="form-lbl">Участок *</label><select class="form-sel" name="section">' + Object.entries(SECTION_NAMES).map(([k,v]) => '<option value="'+k+'">'+v+'</option>').join('') + '</select></div></div><div class="form-group"><label class="form-lbl">Наименование *</label><input class="form-inp" name="operationName" required></div><div class="form-row"><div class="form-group"><label class="form-lbl">Категория *</label><select class="form-sel" name="equipmentCategory">' + Object.entries(CATEGORY_NAMES).map(([k,v]) => '<option value="'+k+'">'+v+'</option>').join('') + '</select></div><div class="form-group"><label class="form-lbl">Тип ремонта</label><select class="form-sel" name="repairType">' + Object.entries(REPAIR_NAMES).map(([k,v]) => '<option value="'+k+'">'+v+'</option>').join('') + '</select></div></div><div class="form-row"><div class="form-group"><label class="form-lbl">Тип оборудования *</label><input class="form-inp" name="equipmentType" required></div><div class="form-group"><label class="form-lbl">Единица</label><input class="form-inp" name="equipmentUnit"></div></div><div class="form-sec-title">🏷️ ТМ</div><div class="form-group"><label class="form-lbl">Код ТМ</label><input class="form-inp tm" name="tm" id="tmInput" maxlength="28" autocomplete="off" inputmode="numeric"><div class="form-hint" id="tmHint">Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code></div></div><div class="form-sec-title">📐 Норматив</div><div class="form-row"><div class="form-group"><label class="form-lbl">Чел-час *</label><input class="form-inp" type="number" name="normValue" min="0.1" step="0.5" required inputmode="decimal"></div><div class="form-group"><label class="form-lbl">Бригада</label><input class="form-inp" type="number" name="teamSize" value="2" min="1" inputmode="numeric"></div></div><div class="form-row"><div class="form-group"><label class="form-lbl">Квалификация</label><input class="form-inp" name="qualification"></div><div class="form-group"><label class="form-lbl">Сложность</label><select class="form-sel" name="complexity">' + [1,2,3,4,5].map(i => '<option value="'+i+'" '+(i===3?'selected':'')+'>'+i+'</option>').join('') + '</select></div></div><div class="form-sec-title">📑 Источник</div><div class="form-row"><div class="form-group"><label class="form-lbl">Тип</label><select class="form-sel" name="sourceType">' + Object.entries(SOURCE_NAMES).map(([k,v]) => '<option value="'+k+'">'+v+'</option>').join('') + '</select></div><div class="form-group"><label class="form-lbl">Код</label><input class="form-inp" name="sourceCode"></div></div><div class="form-row"><div class="form-group"><label class="form-lbl">Достоверность</label><input class="form-inp" type="number" name="confidenceLevel" value="0.85" min="0" max="1" step="0.05" inputmode="decimal"></div><div class="form-group"><label class="form-lbl">Описание</label><input class="form-inp" name="description"></div></div><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap"><button type="button" class="btn btn-ghost" id="addFormReset">Сбросить</button><button type="submit" class="btn btn-orange">💾 Сохранить</button></div></form>').then(() => {
+  appendMsg('<div class="bubble-title">' + (isEdit ? '✏️ Редактировать норматив' : '➕ Добавить норматив') + '</div><div class="bubble-sub">HARD-дедупликация</div><div id="addFormWarn"></div><form id="addForm"><div class="form-sec-title">📋 Основная</div><div class="form-row"><div class="form-group"><label class="form-lbl">Код *</label><input class="form-inp" name="operationCode" required autocapitalize="characters" spellcheck="false" placeholder="ДСП-Н-026"></div><div class="form-group"><label class="form-lbl">Участок *</label><select class="form-sel" name="section">' + Object.entries(SECTION_NAMES).map(([k,v]) => '<option value="'+k+'">'+v+'</option>').join('') + '</select></div></div><div class="form-group"><label class="form-lbl">Наименование *</label><input class="form-inp" name="operationName" required placeholder="Замена/ремонт..."></div><div class="form-row"><div class="form-group"><label class="form-lbl">Категория *</label><select class="form-sel" name="equipmentCategory">' + Object.entries(CATEGORY_NAMES).map(([k,v]) => '<option value="'+k+'">'+v+'</option>').join('') + '</select></div><div class="form-group"><label class="form-lbl">Тип ремонта</label><select class="form-sel" name="repairType">' + Object.entries(REPAIR_NAMES).map(([k,v]) => '<option value="'+k+'">'+v+'</option>').join('') + '</select></div></div><div class="form-row"><div class="form-group"><label class="form-lbl">Тип оборудования *</label><input class="form-inp" name="equipmentType" required placeholder="Электродуговая печь"></div><div class="form-group"><label class="form-lbl">Единица</label><input class="form-inp" name="equipmentUnit" placeholder="ДСП-100"></div></div><div class="form-sec-title">🏷️ ТМ</div><div class="form-group"><label class="form-lbl">Код ТМ</label><input class="form-inp tm" name="tm" id="tmInput" maxlength="28" autocomplete="off" inputmode="numeric" placeholder="1201-210-010-010"><div class="form-hint" id="tmHint">Формат: <code>1201-XXX-XXX-XXX-XXX-XXX-XXX</code></div></div><div class="form-sec-title">📐 Норматив</div><div class="form-row"><div class="form-group"><label class="form-lbl">Чел-час *</label><input class="form-inp" type="number" name="normValue" min="0.1" step="0.5" required inputmode="decimal"></div><div class="form-group"><label class="form-lbl">Бригада</label><input class="form-inp" type="number" name="teamSize" value="2" min="1" inputmode="numeric"></div></div><div class="form-row"><div class="form-group"><label class="form-lbl">Квалификация</label><input class="form-inp" name="qualification" placeholder="4-5 разряд"></div><div class="form-group"><label class="form-lbl">Сложность</label><select class="form-sel" name="complexity">' + [1,2,3,4,5].map(i => '<option value="'+i+'" '+(i===3?'selected':'')+'>'+i+'</option>').join('') + '</select></div></div><div class="form-sec-title">📑 Источник</div><div class="form-row"><div class="form-group"><label class="form-lbl">Тип</label><select class="form-sel" name="sourceType">' + Object.entries(SOURCE_NAMES).map(([k,v]) => '<option value="'+k+'">'+v+'</option>').join('') + '</select></div><div class="form-group"><label class="form-lbl">Код</label><input class="form-inp" name="sourceCode" placeholder="ФЕРп-2001 т.18"></div></div><div class="form-row"><div class="form-group"><label class="form-lbl">Достоверность</label><input class="form-inp" type="number" name="confidenceLevel" value="0.85" min="0" max="1" step="0.05" inputmode="decimal"></div><div class="form-group"><label class="form-lbl">Описание</label><input class="form-inp" name="description"></div></div><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap"><button type="button" class="btn btn-ghost" id="addFormReset">Сбросить</button><button type="submit" class="btn btn-orange">💾 Сохранить</button></div></form>').then(() => {
     const form = document.getElementById('addForm');
     const tmInp = document.getElementById('tmInput');
     const tmHint = document.getElementById('tmHint');
     const defHint = 'Формат: <code>XXXX</code> или <code>XXXX-XXX</code> … до 7 групп. Пример: <code>1201</code>, <code>1221</code>, <code>1201-210-010</code>';
-
+    
     // Восстановление данных для редактирования
     if (state.editingNormId) {
       const n = allNorms().find(x => x.id === state.editingNormId);
@@ -1433,16 +1433,14 @@ appendMsg('<div class="bubble-title">' + (isEdit ? '✏️ Редактиров�
         form.querySelector('[name="confidenceLevel"]').value = n.confidenceLevel;
         form.querySelector('[name="description"]').value = n.description || '';
         
-        // Меняем кнопку "Сохранить" на "Обновить"
         const submitBtn = form.querySelector('button[type="submit"]');
         if(submitBtn) submitBtn.textContent = '💾 Обновить';
         
-        // Триггерим событие для валидации ТМ
         tmInp.dispatchEvent(new Event('input'));
       }
     }
-       
- // ═══ УМНЫЙ DRAG & DROP ДЛЯ ТМ ═══
+    
+    // ═══ УМНЫЙ DRAG & DROP ДЛЯ ТМ ═══
     tmInp.addEventListener('dragover', (e) => { e.preventDefault(); tmInp.style.borderColor = '#fb923c'; });
     tmInp.addEventListener('dragleave', (e) => { e.preventDefault(); tmInp.style.borderColor = ''; });
     tmInp.addEventListener('drop', (e) => {
@@ -1486,7 +1484,7 @@ appendMsg('<div class="bubble-title">' + (isEdit ? '✏️ Редактиров�
            return;
         }
         
-                let existing = document.getElementById('tm-dnd-list');
+        let existing = document.getElementById('tm-dnd-list');
         if (existing) existing.remove();
         const listDiv = document.createElement('div');
         listDiv.id = 'tm-dnd-list';
@@ -1495,13 +1493,13 @@ appendMsg('<div class="bubble-title">' + (isEdit ? '✏️ Редактиров�
         sel.className = 'form-sel';
         sel.innerHTML = '<option value="">-- Выберите ТМ из файла (' + items.length + ' шт.) --</option>' + 
           items.map(function(i) { return '<option value="' + i.code + '">' + i.code + (i.name ? ' — ' + i.name : '') + '</option>'; }).join('');
-                sel.onchange = () => { if (sel.value) { tmInp.value = sel.value; tmInp.dispatchEvent(new Event('input')); } };
+        sel.onchange = () => { if (sel.value) { tmInp.value = sel.value; tmInp.dispatchEvent(new Event('input')); } };
         listDiv.appendChild(sel);
         tmInp.parentNode.appendChild(listDiv);
         showToast('Найдено ' + items.length + ' ТМ-кодов. Выберите нужный в списке.', 'info');
-      }; // <-- Закрывает reader.onload
+      };
       reader.readAsText(file);
-    }); // <-- Закрывает addEventListener('drop')
+    });
     // ═════════════════════════════════
 
     tmInp.addEventListener('input', () => {
@@ -1513,6 +1511,7 @@ appendMsg('<div class="bubble-title">' + (isEdit ? '✏️ Редактиров�
       else { tmInp.classList.add('err'); tmInp.classList.remove('ok'); tmHint.className = 'form-hint err'; tmHint.textContent = '✕ ' + r.msg; }
     });
     form.querySelector('#addFormReset').onclick = () => { form.reset(); tmInp.classList.remove('err','ok'); tmHint.className = 'form-hint'; tmHint.innerHTML = defHint; document.getElementById('addFormWarn').innerHTML = ''; };
+    
     form.onsubmit = e => {
       e.preventDefault();
       const fd = new FormData(e.target);
@@ -1522,6 +1521,7 @@ appendMsg('<div class="bubble-title">' + (isEdit ? '✏️ Редактиров�
       const name = (fd.get('operationName')||'').trim();
       const check = Dedup.check({operationCode:code, operationName:name, tm:tmVal}, allNorms());
       if(check.blocking.length){ document.getElementById('addFormWarn').innerHTML = '<div class="warn-banner err">🚫 ' + check.blocking[0].msg + '</div>'; return; }
+      
       if (state.editingNormId) {
         // ЛОГИКА ОБНОВЛЕНИЯ
         const idx = state.custom.findIndex(x => x.id === state.editingNormId);
@@ -1552,18 +1552,39 @@ appendMsg('<div class="bubble-title">' + (isEdit ? '✏️ Редактиров�
         Plugins.call('versions','saveVersion', norm, 'Создан');
         appendMsg('<div class="bubble-title">✅ Норматив добавлен</div><p>Код: <code>' + Utils.escapeHtml(norm.operationCode) + '</code></p>');
         form.reset(); tmInp.classList.remove('err','ok'); tmHint.className = 'form-hint'; tmHint.innerHTML = defHint;
+      }
     };
   });
 }
 
 /* ═══ ФОРМА ОБОРУДОВАНИЯ ═══ */
 function tabAddEquip(){
-  appendMsg('<div class="bubble-title">🔧 Добавить оборудование</div><form id="addEqForm"><div class="form-row"><div class="form-group"><label class="form-lbl">Код *</label><input class="form-inp" name="code" required autocapitalize="characters" spellcheck="false"></div><div class="form-group"><label class="form-lbl">Участок *</label><select class="form-sel" name="section">' + Object.entries(SECTION_NAMES).map(([k,v]) => '<option value="'+k+'">'+v+'</option>').join('') + '</select></div></div><div class="form-group"><label class="form-lbl">ТМ</label><input class="form-inp tm" name="tm" id="tmEqInput" maxlength="28" autocomplete="off" inputmode="numeric" placeholder="1201-210-010-010"><div class="form-hint" id="tmEqHint">Формат: <code>XXXX</code> или <code>XXXX-XXX</code> … до 7 групп. Пример: <code>1201</code>, <code>1221</code>, <code>1201-210-010</code></div></div><div class="form-row"><div class="form-group"><label class="form-lbl">Категория *</label><select class="form-sel" name="category">' + Object.entries(CATEGORY_NAMES).map(([k,v]) => '<option value="'+k+'">'+v+'</option>').join('') + '</select></div><div class="form-group"><label class="form-lbl">Тип *</label><input class="form-inp" name="type" required></div></div><div class="form-row"><div class="form-group"><label class="form-lbl">Единица *</label><input class="form-inp" name="unit" required></div><div class="form-group"><label class="form-lbl">Производитель</label><input class="form-inp" name="manufacturer"></div></div><div style="display:flex;justify-content:flex-end;margin-top:16px"><button type="submit" class="btn btn-orange">💾 Сохранить</button></div></form>').then(() => {
+  const isEdit = !!state.editingEquipId;
+  appendMsg('<div class="bubble-title">' + (isEdit ? '✏️ Редактировать оборудование' : '🔧 Добавить оборудование') + '</div><form id="addEqForm"><div class="form-row"><div class="form-group"><label class="form-lbl">Код *</label><input class="form-inp" name="code" required autocapitalize="characters" spellcheck="false" placeholder="ЭКВ-УПС-001"></div><div class="form-group"><label class="form-lbl">Участок *</label><select class="form-sel" name="section">' + Object.entries(SECTION_NAMES).map(([k,v]) => '<option value="'+k+'">'+v+'</option>').join('') + '</select></div></div><div class="form-group"><label class="form-lbl">ТМ</label><input class="form-inp tm" name="tm" id="tmEqInput" maxlength="28" autocomplete="off" inputmode="numeric" placeholder="1201-210-010-010"><div class="form-hint" id="tmEqHint">Формат: <code>XXXX</code> или <code>XXXX-XXX</code> … до 7 групп. Пример: <code>1201</code>, <code>1221</code>, <code>1201-210-010</code></div></div><div class="form-row"><div class="form-group"><label class="form-lbl">Категория *</label><select class="form-sel" name="category">' + Object.entries(CATEGORY_NAMES).map(([k,v]) => '<option value="'+k+'">'+v+'</option>').join('') + '</select></div><div class="form-group"><label class="form-lbl">Тип *</label><input class="form-inp" name="type" required placeholder="ДСП-100"></div></div><div class="form-row"><div class="form-group"><label class="form-lbl">Единица *</label><input class="form-inp" name="unit" required placeholder="ДСП-100"></div><div class="form-group"><label class="form-lbl">Производитель</label><input class="form-inp" name="manufacturer" placeholder="Danieli"></div></div><div style="display:flex;justify-content:flex-end;margin-top:16px"><button type="submit" class="btn btn-orange">💾 Сохранить</button></div></form>').then(() => {
     const form = document.getElementById('addEqForm');
     const tmInp = document.getElementById('tmEqInput');
     const tmHint = document.getElementById('tmEqHint');
     const defHint = 'Формат: <code>XXXX</code> или <code>XXXX-XXX</code> … до 7 групп. Пример: <code>1201</code>, <code>1221</code>, <code>1201-210-010</code>';
-         // ═══ УМНЫЙ DRAG & DROP ДЛЯ ТМ (Оборудование) ═══
+
+    // Восстановление данных для редактирования
+    if (state.editingEquipId) {
+      const eq = state.customEquip.find(x => x.id === state.editingEquipId);
+      if (eq) {
+        form.querySelector('[name="code"]').value = eq.code;
+        form.querySelector('[name="section"]').value = eq.section;
+        form.querySelector('[name="category"]').value = eq.category;
+        form.querySelector('[name="type"]').value = eq.type;
+        form.querySelector('[name="unit"]').value = eq.unit;
+        form.querySelector('[name="manufacturer"]').value = eq.manufacturer || '';
+        form.querySelector('[name="tm"]').value = eq.tm || '';
+        
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if(submitBtn) submitBtn.textContent = '💾 Обновить';
+        tmInp.dispatchEvent(new Event('input'));
+      }
+    }
+
+    // ═══ УМНЫЙ DRAG & DROP ДЛЯ ТМ (Оборудование) ═══
     tmInp.addEventListener('dragover', (e) => { e.preventDefault(); tmInp.style.borderColor = '#fb923c'; });
     tmInp.addEventListener('dragleave', (e) => { e.preventDefault(); tmInp.style.borderColor = ''; });
     tmInp.addEventListener('drop', (e) => {
@@ -1600,7 +1621,7 @@ function tabAddEquip(){
            return;
         }
         
-                if (items.length === 1) {
+        if (items.length === 1) {
            tmInp.value = items[0].code;
            tmInp.dispatchEvent(new Event('input'));
            showToast('ТМ-код извлечен: ' + items[0].code, 'ok');
@@ -1620,9 +1641,9 @@ function tabAddEquip(){
         listDiv.appendChild(sel);
         tmInp.parentNode.appendChild(listDiv);
         showToast('Найдено ' + items.length + ' ТМ-кодов. Выберите нужный.', 'info');
-      }; // <-- Закрывает reader.onload
+      }; // Закрывает reader.onload
       reader.readAsText(file);
-    }); // <-- Закрывает drop
+    }); // Закрывает drop
     // ═══════════════════════════════════════════
 
     tmInp.addEventListener('input', () => { 
@@ -1631,9 +1652,11 @@ function tabAddEquip(){
         if(r.ok){ tmHint.className = 'form-hint ok'; tmHint.textContent = '✓ ' + r.msg; } 
         else { tmHint.className = 'form-hint err'; tmHint.textContent = '✕ ' + r.msg; } 
     });
+    
     form.onsubmit = e => {
       e.preventDefault();
       const fd = new FormData(e.target);
+      
       if (state.editingEquipId) {
         // ЛОГИКА ОБНОВЛЕНИЯ ОБОРУДОВАНИЯ
         const idx = state.customEquip.findIndex(x => x.id === state.editingEquipId);
@@ -1661,16 +1684,18 @@ function tabAddEquip(){
         state.customEquip.push(eq); saveEquip();
         appendMsg('<div class="bubble-title">✅ Оборудование добавлено</div>');
         form.reset(); tmHint.className = 'form-hint'; tmHint.innerHTML = defHint;
-    };
-  });
+      }
+    }; // Закрывает form.onsubmit
+  }); // Закрывает appendMsg().then
 }
 
 /* ═══ ОБОРУДОВАНИЕ ═══ */
 function tabEquipment(){
   const eqBySection = {};
   allNorms().forEach(n => { if(!eqBySection[n.section]) eqBySection[n.section] = {types:new Set(), ops:0}; eqBySection[n.section].types.add(n.equipmentType); eqBySection[n.section].ops++; });
-  appendMsg('<div class="bubble-title">⚙️ Оборудование</div><div class="form-sec-title">🏭 По участкам</div>' + Object.entries(eqBySection).map(([sec, d]) => '<div class="tile" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:6px"><span style="color:#fff;font-weight:700">' + SECTION_NAMES[sec] + '</span><span class="badge-mini">' + d.types.size + ' типов • ' + d.ops + ' операций</span></div><div style="display:flex;flex-wrap:wrap;gap:4px">' + [...d.types].map(t => '<span class="chip chip-orange" style="font-size:10.5px">' + Utils.escapeHtml(t) + '</span>').join('') + '</div></div>').join('') + '<div class="form-sec-title" style="margin-top:16px">🔧 Пользовательское (' + state.customEquip.length + ')</div>' + (state.customEquip.map(eq => '<div class="tile" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:200px"><div style="font-family:monospace;font-size:11.5px;color:#fdba74">' + Utils.escapeHtml(eq.code) + '</div><div style="color:#fff;font-weight:600">' + Utils.escapeHtml(eq.type) + ' — ' + Utils.escapeHtml(eq.unit) + '</div>' + (eq.tm?'<div style="margin-top:4px"><span class="tm-code">ТМ: ' + eq.tm + '</span></div>':'') + '</div><button class="btn btn-danger btn-xs" type="button" data-del-eq="' + eq.id + '">🗑</button></div></div>').join('') || '<div class="empty">Пока нет</div>')).then(() => {
+  appendMsg('<div class="bubble-title">⚙️ Оборудование</div><div class="form-sec-title">🏭 По участкам</div>' + Object.entries(eqBySection).map(([sec, d]) => '<div class="tile" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:6px"><span style="color:#fff;font-weight:700">' + SECTION_NAMES[sec] + '</span><span class="badge-mini">' + d.types.size + ' типов • ' + d.ops + ' операций</span></div><div style="display:flex;flex-wrap:wrap;gap:4px">' + [...d.types].map(t => '<span class="chip chip-orange" style="font-size:10.5px">' + Utils.escapeHtml(t) + '</span>').join('') + '</div></div>').join('') + '<div class="form-sec-title" style="margin-top:16px">🔧 Пользовательское (' + state.customEquip.length + ')</div>' + (state.customEquip.map(eq => '<div class="tile" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:200px"><div style="font-family:monospace;font-size:11.5px;color:#fdba74">' + Utils.escapeHtml(eq.code) + '</div><div style="color:#fff;font-weight:600">' + Utils.escapeHtml(eq.type) + ' — ' + Utils.escapeHtml(eq.unit) + '</div>' + (eq.tm?'<div style="margin-top:4px"><span class="tm-code">ТМ: ' + eq.tm + '</span></div>':'') + '</div><div style="display:flex;gap:6px">' + (Auth.currentSession()?.role === 'admin' ? `<button class="btn btn-ghost btn-xs" type="button" data-edit-eq="${eq.id}">✏️</button>` : '') + '<button class="btn btn-danger btn-xs" type="button" data-del-eq="' + eq.id + '">🗑</button></div></div></div>').join('') || '<div class="empty">Пока нет</div>')).then(() => {
     document.querySelectorAll('[data-del-eq]').forEach(b => b.onclick = () => { if(confirm('Удалить?')){ state.customEquip = state.customEquip.filter(e => e.id !== b.dataset.delEq); saveEquip(); renderChat(); } });
+    document.querySelectorAll('[data-edit-eq]').forEach(b => b.onclick = () => { state.editingEquipId = b.dataset.editEq; state.tab = 'addEquip'; renderNav(); renderChat(); });
   });
 }
 
