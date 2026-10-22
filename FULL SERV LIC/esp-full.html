@@ -508,9 +508,9 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
     <div class="login-hint">
       Демо-доступы (нажмите для подстановки):
       <div class="login-accounts">
-        <div class="login-account" onclick="document.getElementById('loginInput').value='admin';document.getElementById('passwordInput').value='admin123';document.getElementById('loginError').classList.remove('show');"><div class="role">Админ</div><div class="login-name">admin</div></div>
-        <div class="login-account" onclick="document.getElementById('loginInput').value='engineer';document.getElementById('passwordInput').value='eng123';document.getElementById('loginError').classList.remove('show');"><div class="role">Инженер</div><div class="login-name">engineer</div></div>
-        <div class="login-account" onclick="document.getElementById('loginInput').value='user';document.getElementById('passwordInput').value='user123';document.getElementById('loginError').classList.remove('show');"><div class="role">Польз.</div><div class="login-name">user</div></div>
+        <div class="login-account" data-login="admin" data-pwd="admin123" onclick="document.getElementById('loginInput').value='admin';document.getElementById('passwordInput').value='admin123';document.getElementById('loginError').classList.remove('show');"><div class="role">Админ</div><div class="login-name">admin</div></div>
+        <div class="login-account" data-login="engineer" data-pwd="eng123" onclick="document.getElementById('loginInput').value='engineer';document.getElementById('passwordInput').value='eng123';document.getElementById('loginError').classList.remove('show');"><div class="role">Инженер</div><div class="login-name">engineer</div></div>
+        <div class="login-account" data-login="user" data-pwd="user123" onclick="document.getElementById('loginInput').value='user';document.getElementById('passwordInput').value='user123';document.getElementById('loginError').classList.remove('show');"><div class="role">Польз.</div><div class="login-name">user</div></div>
       </div>
     </div>
   </form>
@@ -644,11 +644,24 @@ input,select,textarea{-webkit-appearance:none;appearance:none}
       if(!storedHash) return false;
       if(!storedHash.startsWith('sha256:') && !storedHash.startsWith('fnv:')) return storedHash === pwd;
       const data = PWD_SALT + '::' + pwd;
+      
+      // Универсальная проверка с фолбэком
       if(storedHash.startsWith('sha256:')){
-        if(!window.crypto || !crypto.subtle) return false;
-        try{ return ('sha256:' + await sha256Hex(data)) === storedHash; }catch(e){ return false; }
+        if(window.crypto && crypto.subtle){
+          try{ 
+            const testHash = 'sha256:' + await sha256Hex(data);
+            if (testHash === storedHash) return true;
+          }catch(e){ console.warn('[ESP] SHA-256 failed, fallback to FNV'); }
+        }
+        // Если SHA-256 не сработал (ошибка или несовпадение), пробуем FNV
+        return ('fnv:' + fnvIterHex(data)) === storedHash;
       }
-      return ('fnv:' + fnvIterHex(data)) === storedHash;
+      
+      if(storedHash.startsWith('fnv:')){
+        return ('fnv:' + fnvIterHex(data)) === storedHash;
+      }
+      
+      return false;
     }
     function isHashed(h){ return typeof h === 'string' && (h.startsWith('sha256:') || h.startsWith('fnv:')); }
     function loadUsers(){ const u = Storage.get(USERS_KEY, null); if(!u || !Array.isArray(u)){ Storage.set(USERS_KEY, DEFAULT_USERS); return JSON.parse(JSON.stringify(DEFAULT_USERS)); } return u; }
