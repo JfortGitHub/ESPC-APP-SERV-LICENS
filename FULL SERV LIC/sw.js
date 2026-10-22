@@ -1,5 +1,5 @@
 // Меняем версию кэша, чтобы браузер сбросил старые файлы и скачал новые
-const CACHE_NAME = 'esp-cache-v4.21'; 
+const CACHE_NAME = 'esp-cache-v4.22'; 
 const URLS_TO_CACHE = [
   './',
   './index.html',
