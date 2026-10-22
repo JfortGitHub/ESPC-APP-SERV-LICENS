@@ -1269,9 +1269,9 @@ function renderNormsList(list){
     const lv = vs.length ? vs[vs.length-1] : null;
     return '<div class="norm-row"><div class="norm-row-head"><div class="norm-row-info"><div class="norm-row-code">' + Utils.escapeHtml(n.operationCode) + '</div><div class="norm-row-name">' + Utils.escapeHtml(n.operationName) + '</div><div class="norm-row-eq">' + (SECTION_NAMES[n.section]||'') + ' • ' + Utils.escapeHtml(n.equipmentType) + (lv?' • <span style="color:'+vc+';font-size:10.5px">v'+lv._versionNumber+'</span>':'') + '</div>' + (n.tm?'<div class="norm-row-tm"><span class="tm-code">ТМ: '+n.tm+'</span></div>':'') + '</div><div class="norm-row-stats"><div class="norm-stat"><div class="norm-stat-v">' + n.normValue + '</div><div class="norm-stat-l">чел-час</div></div><div class="norm-stat"><div class="norm-stat-v" style="color:'+cc+';font-size:15px">' + (n.confidenceLevel*100).toFixed(0) + '%</div><div class="norm-stat-l">достов.</div></div></div><div class="norm-row-actions" style="flex-direction:column;gap:6px">
     <button class="btn ' + (inCalc?'btn-success':'btn-primary') + ' btn-xs" type="button" data-norm-add="' + n.id + '">' + (inCalc?'✓ В расчёте':'+ В расчёт') + '</button>
-    <button class="btn btn-ghost btn-xs" type="button" data-wf-open="' + n.id + '">✓ Согласование</button>
-    ${Auth.currentSession()?.role === 'admin' && n.isCustom ? `<button class="btn btn-ghost btn-xs" type="button" data-norm-edit="${n.id}">✏️ Изменить</button>` : ''}
-</div></div><div class="chips" style="margin-top:8px"><span class="chip chip-purple">' + REPAIR_NAMES[n.repairType] + '</span><span class="chip chip-cyan">Сложность ' + n.complexity + '/5</span><span class="chip chip-blue">' + n.teamSize + ' чел.</span><span class="chip chip-green">' + Utils.escapeHtml(n.sourceCode) + '</span></div></div>';
+    <button class="btn btn-ghost btn-xs" type="button" data-wf-open="' + n.id + '">✓ Согласование</button>' +
+(Auth.currentSession()?.role === 'admin' && n.isCustom ? '<button class="btn btn-ghost btn-xs" type="button" data-norm-edit="' + n.id + '">✏️ Изменить</button>' : '') +
+'</div></div><div class="chips" style="margin-top:8px"><span class="chip chip-purple">' + REPAIR_NAMES[n.repairType] + '</span><span class="chip chip-cyan">Сложность ' + n.complexity + '/5</span><span class="chip chip-blue">' + n.teamSize + ' чел.</span><span class="chip chip-green">' + Utils.escapeHtml(n.sourceCode) + '</span></div></div>';
   }).join('');
 }
 function attachNormEvents(){
