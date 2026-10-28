@@ -1072,7 +1072,7 @@ const BASE_NORMS = N_RAW.map(r => ({
   const { Utils, Storage, Auth } = ESP;
   const ROBOTO_CDN={regular:'https://cdn.jsdelivr.net/gh/googlefonts/roboto@main/src/hinted/Roboto-Regular.ttf',bold:'https://cdn.jsdelivr.net/gh/googlefonts/roboto@main/src/hinted/Roboto-Bold.ttf'};
   let fontRegistered=false, fontRegistrationPromise=null, FONT_CACHE={regular:null,bold:null};
-  function isAvailable(){   if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) return false;   if (window.__JSPDF_FAILED) return false;   if (window.__AUTOTABLE_FAILED) return false;   // Проверяем, что плагин реально приклеился   try {     const testDoc = new window.jspdf.jsPDF();     return typeof testDoc.autoTable === 'function';   } catch(e) {     return false;   } }
+  function isAvailable(){return typeof window.jspdf!=='undefined'&&window.jspdf.jsPDF&&!window.__JSPDF_FAILED&&!window.__AUTOTABLE_FAILED;}
   function ab2b64(buffer){const bytes=new Uint8Array(buffer); let binary=''; const chunk=0x8000; for(let i=0;i<bytes.length;i+=chunk){binary+=String.fromCharCode.apply(null,bytes.subarray(i,i+chunk));} return btoa(binary);}
   async function loadFontFromCDN(url){ try{ const ctrl=new AbortController(); const t=setTimeout(()=>ctrl.abort(),8000); const r=await fetch(url,{signal:ctrl.signal}); clearTimeout(t); if(!r.ok)throw new Error('HTTP '+r.status); const ab=await r.arrayBuffer(); return ab2b64(ab); }catch(e){ return null; } }
   function registerFontInDoc(doc,b64r,b64b){ try{ if(b64r){doc.addFileToVFS('Roboto-Regular.ttf',b64r);doc.addFont('Roboto-Regular.ttf','Roboto','normal');} if(b64b){doc.addFileToVFS('Roboto-Bold.ttf',b64b);doc.addFont('Roboto-Bold.ttf','Roboto','bold');} return true; }catch(e){return false;} }
