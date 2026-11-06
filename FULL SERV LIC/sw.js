@@ -1,7 +1,9 @@
-const CACHE_NAME = 'esp-cache-v6.6'; // Обязательно подняли версию
+const CACHE_NAME = 'esp-cache-v6.7'; // Обязательно поднимите версию!
 const URLS_TO_CACHE = [
   './', './index.html', './esp-full.html', './esp-lite.html',
-  './manifest.json', './icon-192.png'
+  './manifest.json', './icon-192.png',
+  './jspdf.umd.min.js', 
+  './jspdf.plugin.autotable.min.js'
 ];
 
 self.addEventListener('install', (event) => {
