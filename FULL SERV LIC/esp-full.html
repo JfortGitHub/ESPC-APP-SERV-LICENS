@@ -1003,38 +1003,13 @@ const BASE_NORMS = N_RAW.map(r => ({
   function setLastImport(d){Storage.set('import_last',d);}
   function clearLastImport(){Storage.remove('import_last');}
   function generateTemplateCSV(){ const headers=NORM_COLUMNS.map(c=>c.label); const example=['ДСП-НОВОЕ-001','Замена детали','ДСП','Механическое','Электродуговая печь','ДСП-100','1201-001-001-001-001-001-100','42','3','4-5 разряд','3','Федеральные нормативы','ФЕРп-2001','ФЕР','0.85','Средний ремонт','Ключи, Лебёдка','Наряд-допуск, СИЗ','Описание']; return Utils.toCSV([headers,example]); }
-  ESP.Plugins.register('import-pro',{
-    version:'2.0', NORM_COLUMNS, EQUIP_COLUMNS, detectFormat, parseXLSX, parseCSVRaw, parseJSONRaw, 
-    parseWithProfile, autoMap, validateRow, upsertNorms, upsertEquipment, getProfiles, saveProfile, 
-    deleteProfile, getHistory, pushHistory, getLastImport, setLastImport, clearLastImport, generateTemplateCSV
-  });
+  ESP.Plugins.register('import-pro',{version:'2.0',NORM_COLUMNS,EQUIP_COLUMNS,detectFormat,parseXLSX,parseCSVRaw,parseJSONRaw,parseWithProfile,autoMap,validateRow,upsertNorms,upsertEquipment,getProfiles,saveProfile,deleteProfile,getHistory,pushHistory,getLastImport,setLastImport,clearLastImport,generateTemplateCSV});
 })();
 
 (function(){ 'use strict';
   const { Dedup } = ESP;
-  function findFullDuplicates(norm,col){ 
-    const dups=[]; 
-    const bc=Dedup.findByCode(norm.operationCode,col); 
-    if(bc)dups.push({type:'code',severity:'error',item:bc,msg:'Совпадение по коду'}); 
-    if(norm.tm){const bt=Dedup.findByTM(norm.tm,col); if(bt)dups.push({type:'tm',severity:'warning',item:bt,msg:'Совпадение по ТМ'});} 
-    const sim=Dedup.findSimilar(norm.operationName,col,0.75); 
-    sim.forEach(s=>dups.push({type:'similar',severity:'info',item:s.item,score:s.score,msg:'Похоже на "'+s.item.operationName+'"'})); 
-    return dups; 
-  }
-  function bulkDuplicatesReport(col){ 
-    const r={exact:[],similar:[]}; 
-    const seen=new Map(); 
-    col.forEach(n=>{const k=Dedup.normalize(n.operationCode); if(seen.has(k))r.exact.push({a:seen.get(k),b:n}); else seen.set(k,n);}); 
-    if(col.length<=3000){ 
-      for(let i=0;i<col.length;i++){
-        for(let j=i+1;j<col.length;j++){
-          const s=Dedup.sim(col[i].operationName,col[j].operationName); 
-          if(s>=0.9&&s<1)r.similar.push({a:col[i],b:col[j],score:s});
-        }
-      } 
-    } 
-    return r; 
-  }
+  function findFullDuplicates(norm,col){ const dups=[]; const bc=Dedup.findByCode(norm.operationCode,col); if(bc)dups.push({type:'code',severity:'error',item:bc,msg:'Совпадение по коду'}); if(norm.tm){const bt=Dedup.findByTM(norm.tm,col); if(bt)dups.push({type:'tm',severity:'warning',item:bt,msg:'Совпадение по ТМ'});} const sim=Dedup.findSimilar(norm.operationName,col,0.75); sim.forEach(s=>dups.push({type:'similar',severity:'info',item:s.item,score:s.score,msg:'Похоже на "'+s.item.operationName+'"'})); return dups; }
+  function bulkDuplicatesReport(col){ const r={exact:[],similar:[]}; const seen=new Map(); col.forEach(n=>{const k=Dedup.normalize(n.operationCode); if(seen.has(k))r.exact.push({a:seen.get(k),b:n}); else seen.set(k,n);}); if(col.length<=3000){ for(let i=0;i<col.length;i++){for(let j=i+1;j<col.length;j++){const s=Dedup.sim(col[i].operationName,col[j].operationName); if(s>=0.9&&s<1)r.similar.push({a:col[i],b:col[j],score:s});}} } return r; }
   ESP.Plugins.register('dedup-hard',{version:'1.0',findFullDuplicates,bulkDuplicatesReport});
 })();
 
@@ -1770,32 +1745,11 @@ function renderImportProTab(tab){
   document.getElementById('tmplBtn').onclick = () => { const csv = Plugins.call('import-pro','generateTemplateCSV'); Utils.download('шаблон.csv', '\uFEFF'+csv, 'text/csv'); };
 }
 function handleFiles(file, isEq){
-    try {
-      const fmt = Plugins.call('import-pro', 'detectFormat', null, file.name);
-      if(fmt === 'unknown'){ alert('Формат не поддерживается. Ожидается XLSX, CSV или JSON.'); return; }
-      
-      if(fmt === 'xlsx'){ 
-        Plugins.call('import-pro','parseXLSX', file)
-          .then(parsed => { if(!parsed || !parsed.ok){ alert(parsed?.msg || 'Ошибка XLSX'); return; } processParsed(parsed, isEq, file.name); })
-          .catch(err => alert('Ошибка чтения XLSX: ' + err.message)); 
-      }
-      else { 
-        const reader = new FileReader(); 
-        reader.onload = () => { 
-          try {
-            const parsed = fmt === 'json' ? Plugins.call('import-pro','parseJSONRaw', reader.result) : Plugins.call('import-pro','parseCSVRaw', reader.result); 
-            if(!parsed || !parsed.ok){ alert(parsed?.msg || 'Ошибка парсинга файла'); return; } 
-            processParsed(parsed, isEq, file.name); 
-          } catch(e) {
-            alert('Ошибка при чтении файла: ' + e.message);
-          }
-        }; 
-        reader.readAsText(file); 
-      }
-    } catch(e) {
-      alert('Системная ошибка: ' + e.message);
-    }
-  }
+  const fmt = Plugins.call('import-pro','detectFormat', null, file.name);
+  if(fmt === 'unknown'){ alert('Формат не поддерживается'); return; }
+  if(fmt === 'xlsx'){ Plugins.call('import-pro','parseXLSX', file).then(parsed => { if(!parsed.ok){ alert(parsed.msg); return; } processParsed(parsed, isEq, file.name); }).catch(err => alert(err.message)); }
+  else { const reader = new FileReader(); reader.onload = () => { const parsed = fmt === 'json' ? Plugins.call('import-pro','parseJSONRaw', reader.result) : Plugins.call('import-pro','parseCSVRaw', reader.result); if(!parsed.ok){ alert(parsed.msg); return; } processParsed(parsed, isEq, file.name); }; reader.readAsText(file); }
+}
 function processParsed(parsed, isEq, filename){ state._importParsed = parsed; state._importIsEquip = isEq; state._importFilename = filename; renderPreview(parsed, isEq); }
 function renderPreview(parsed, isEq){
   const area = document.getElementById('importPreviewArea'); if(!area) return;
