@@ -1007,8 +1007,9 @@ const BASE_NORMS = N_RAW.map(r => ({
     version:'2.0', NORM_COLUMNS, EQUIP_COLUMNS, detectFormat, parseXLSX, parseCSVRaw, parseJSONRaw, 
     parseWithProfile, autoMap, validateRow, upsertNorms, upsertEquipment, getProfiles, saveProfile, 
     deleteProfile, getHistory, pushHistory, getLastImport, setLastImport, clearLastImport, generateTemplateCSV
-  })();
-
+  });
+})();
+/*
 (function(){ 'use strict';
   const { Dedup } = ESP;
   function findFullDuplicates(norm,col){ 
@@ -1036,7 +1037,7 @@ const BASE_NORMS = N_RAW.map(r => ({
   }
   ESP.Plugins.register('dedup-hard',{version:'1.0',findFullDuplicates,bulkDuplicatesReport});
 })();
-
+*/
 (function(){ function predictNorm(input,col){ const {section,equipmentCategory,complexity=3,teamSize=2,repairType='ТР'}=input; let cand=col.filter(n=>{let m=0; if(n.section===section)m++; if(n.equipmentCategory===equipmentCategory)m++; if(n.repairType===repairType)m++; return m>=2;}); if(cand.length<5)cand=col.filter(n=>n.equipmentCategory===equipmentCategory); if(cand.length<3)cand=col; if(!cand.length)return {ok:false,msg:'Нет данных'}; const avgN=cand.reduce((s,n)=>s+n.normValue,0)/cand.length; const avgCx=cand.reduce((s,n)=>s+n.complexity,0)/cand.length; const avgT=cand.reduce((s,n)=>s+n.teamSize,0)/cand.length; const K_cx=1+(complexity-avgCx)*0.12; const K_t=1+(teamSize-avgT)*0.05; const rk={'ТР':0.85,'СР':1.0,'КР':1.25}; const avgRk=cand.reduce((s,n)=>s+(rk[n.repairType]||1),0)/cand.length; const K_r=(rk[repairType]||1)/avgRk; const pred=avgN*K_cx*K_t*K_r; const v=cand.reduce((s,n)=>s+Math.pow(n.normValue-avgN,2),0)/cand.length; const cv=avgN?Math.sqrt(v)/avgN:1; const conf=Math.max(0.3,Math.min(0.95,0.95-cv*0.5-(cand.length<10?0.15:0))); return {ok:true,predicted:+pred.toFixed(1),lower:+(pred*0.85).toFixed(1),upper:+(pred*1.15).toFixed(1),confidence:+conf.toFixed(2),basedOn:cand.length,coefficients:{complexity:+K_cx.toFixed(3),team:+K_t.toFixed(3),repair:+K_r.toFixed(3)},similarSamples:cand.slice(0,5)}; } ESP.Plugins.register('ml',{version:'1.0',predictNorm}); })();
 
 (function(){ 'use strict';
@@ -2260,22 +2261,22 @@ const TABS = {
 };
 
 /* ═══ ИНИЦИАЛИЗАЦИЯ ═══ */
-try { ESP_GUARD.init(); } catch(e) {}
-try { ESP.init(); } catch(e) {}
-try { APP.setVersion('full'); } catch(e) {}
+ESP_GUARD.init();
+ESP.init();
+APP.setVersion('full');
 
-try {
+try{
   const _baseline = ESP_GUARD.integrityHash();
   ESP_GUARD.startIntegrityCheck(_baseline, () => { console.warn('[ESP] Обнаружено изменение ядра'); });
   ESP_GUARD.startAntiDebug(
     () => console.info('%cESP Full V5.0 · ' + ESP_GUARD.licenseId + ' · WM: ' + ESP_GUARD.watermark, 'color:#fb923c;font-weight:bold'),
     null
   );
-} catch(e) {}
+}catch(e){}
 
-try {
+try{
   document.querySelector('.sidebar-footer').innerHTML = 'ЭСПЦ © 2024–2026 · V5.0 <span class="ver">Full</span> · <span style="opacity:.55;font-family:monospace;font-size:9.5px">' + ESP_GUARD.watermark + '</span>';
-} catch(e) {}
+}catch(e){}
 
 document.getElementById('loginForm').onsubmit = async e => {
   e.preventDefault();
@@ -2290,13 +2291,8 @@ document.getElementById('loginForm').onsubmit = async e => {
     setTimeout(() => err.classList.remove('show'), 2500);
   }
 };
-
 document.querySelectorAll('.login-account').forEach(el => {
-  el.onclick = () => { 
-    document.getElementById('loginInput').value = el.dataset.login; 
-    document.getElementById('passwordInput').value = el.dataset.pwd; 
-    document.getElementById('loginError').classList.remove('show'); 
-  };
+  el.onclick = () => { document.getElementById('loginInput').value = el.dataset.login; document.getElementById('passwordInput').value = el.dataset.pwd; document.getElementById('loginError').classList.remove('show'); };
 });
 
 (async () => {
@@ -2305,17 +2301,19 @@ document.querySelectorAll('.login-account').forEach(el => {
   else showLogin();
 })();
 
-// ═══ АВТОСОХРАНЕНИЕ КАЛЬКУЛЯТОРА ═══
+// ═══ АВТОСОХРАНЕНИЕ КАЛЬКУЛЯТОРА (каждые 30 сек) ═══
 setInterval(() => {
   if (state.calc && state.calc.length >= 0) {
     Storage.set('autosave_calc', state.calc);
+    // Для отладки можно раскомментировать строку ниже:
+    // console.log('Автосохранение выполнено:', state.calc.length);
   }
 }, 30000);
 </script>
-
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
+    // Регистрируем с относительным путем и scope для GitHub Pages
     navigator.serviceWorker.register('./sw.js', { scope: './' })
       .then((registration) => {
         console.log('[PWA] Service Worker зарегистрирован:', registration.scope);
