@@ -2304,15 +2304,13 @@ document.querySelectorAll('.login-account').forEach(el => {
 setInterval(() => {
   if (state.calc && state.calc.length >= 0) {
     Storage.set('autosave_calc', state.calc);
-    // Для отладки можно раскомментировать строку ниже:
-    // console.log('Автосохранение выполнено:', state.calc.length);
   }
 }, 30000);
 </script>
+
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    // Регистрируем с относительным путем и scope для GitHub Pages
     navigator.serviceWorker.register('./sw.js', { scope: './' })
       .then((registration) => {
         console.log('[PWA] Service Worker зарегистрирован:', registration.scope);
