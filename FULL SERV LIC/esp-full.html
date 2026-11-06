@@ -1007,9 +1007,8 @@ const BASE_NORMS = N_RAW.map(r => ({
     version:'2.0', NORM_COLUMNS, EQUIP_COLUMNS, detectFormat, parseXLSX, parseCSVRaw, parseJSONRaw, 
     parseWithProfile, autoMap, validateRow, upsertNorms, upsertEquipment, getProfiles, saveProfile, 
     deleteProfile, getHistory, pushHistory, getLastImport, setLastImport, clearLastImport, generateTemplateCSV
-  });
-})();
-/*
+  })();
+
 (function(){ 'use strict';
   const { Dedup } = ESP;
   function findFullDuplicates(norm,col){ 
@@ -1037,7 +1036,7 @@ const BASE_NORMS = N_RAW.map(r => ({
   }
   ESP.Plugins.register('dedup-hard',{version:'1.0',findFullDuplicates,bulkDuplicatesReport});
 })();
-*/
+
 (function(){ function predictNorm(input,col){ const {section,equipmentCategory,complexity=3,teamSize=2,repairType='ТР'}=input; let cand=col.filter(n=>{let m=0; if(n.section===section)m++; if(n.equipmentCategory===equipmentCategory)m++; if(n.repairType===repairType)m++; return m>=2;}); if(cand.length<5)cand=col.filter(n=>n.equipmentCategory===equipmentCategory); if(cand.length<3)cand=col; if(!cand.length)return {ok:false,msg:'Нет данных'}; const avgN=cand.reduce((s,n)=>s+n.normValue,0)/cand.length; const avgCx=cand.reduce((s,n)=>s+n.complexity,0)/cand.length; const avgT=cand.reduce((s,n)=>s+n.teamSize,0)/cand.length; const K_cx=1+(complexity-avgCx)*0.12; const K_t=1+(teamSize-avgT)*0.05; const rk={'ТР':0.85,'СР':1.0,'КР':1.25}; const avgRk=cand.reduce((s,n)=>s+(rk[n.repairType]||1),0)/cand.length; const K_r=(rk[repairType]||1)/avgRk; const pred=avgN*K_cx*K_t*K_r; const v=cand.reduce((s,n)=>s+Math.pow(n.normValue-avgN,2),0)/cand.length; const cv=avgN?Math.sqrt(v)/avgN:1; const conf=Math.max(0.3,Math.min(0.95,0.95-cv*0.5-(cand.length<10?0.15:0))); return {ok:true,predicted:+pred.toFixed(1),lower:+(pred*0.85).toFixed(1),upper:+(pred*1.15).toFixed(1),confidence:+conf.toFixed(2),basedOn:cand.length,coefficients:{complexity:+K_cx.toFixed(3),team:+K_t.toFixed(3),repair:+K_r.toFixed(3)},similarSamples:cand.slice(0,5)}; } ESP.Plugins.register('ml',{version:'1.0',predictNorm}); })();
 
 (function(){ 'use strict';
