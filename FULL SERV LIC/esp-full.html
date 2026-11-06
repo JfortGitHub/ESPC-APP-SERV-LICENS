@@ -33,8 +33,9 @@ function loadCDN(urls, flagName){
 }
 </script>
 <script>loadCDN(['https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js','https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js','https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'], '__XLSX_FAILED');</script>
-<script>loadCDN(['https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js','https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js'], '__JSPDF_FAILED');</script>
-<script>loadCDN(['https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js','https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js','https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js'], '__AUTOTABLE_FAILED');</script>
+<!-- Локальные библиотеки для PDF (работают всегда) -->
+<script src="./jspdf.umd.min.js"></script>
+<script src="./jspdf.plugin.autotable.min.js"></script>
 <script>loadCDN(['https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js','https://unpkg.com/docx@8.5.0/build/index.umd.js'], '__DOCX_FAILED');</script>
 <style>
 :root{--bg:#111827;--panel:#1f2937;--border:#374151;--border-hi:#4b5563;--text:#e5e7eb;--muted:#9ca3af;--dim:#6b7280;--accent:#2563eb;--green:#16a34a;--red:#dc2626;--yellow:#eab308;--purple:#a855f7;--cyan:#06b6d4;--orange:#ea580c}
