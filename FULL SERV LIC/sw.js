@@ -1,4 +1,4 @@
-const CACHE_NAME = 'esp-cache-v6.5'; // Обязательно подняли версию
+const CACHE_NAME = 'esp-cache-v6.6'; // Обязательно подняли версию
 const URLS_TO_CACHE = [
   './', './index.html', './esp-full.html', './esp-lite.html',
   './manifest.json', './icon-192.png'
