@@ -1779,7 +1779,7 @@ function performImport(items, isEq, dryRun){
 /* ═══ ДЕДУПЛИКАЦИЯ ═══ */
 function tabDedupHard(){
   const norms = allNorms();
-  const report = Plugins.call('dedup-hard','bulkDuplicatesReport', norms);
+  const report = Plugins.call('dedup-hard','bulkDuplicatesReport', norms) || { exact: [], similar: [] };
   appendMsg('<div class="bubble-title">🔎 Дедупликация</div><div class="grid4"><div class="tile"><div class="tile-h">Всего</div><div class="tile-v blue">' + norms.length + '</div></div><div class="tile"><div class="tile-h">Точных дублей</div><div class="tile-v red">' + report.exact.length + '</div></div><div class="tile"><div class="tile-h">Похожих</div><div class="tile-v yellow">' + report.similar.length + '</div></div><div class="tile"><div class="tile-h">Уникальных</div><div class="tile-v green">' + (norms.length - report.exact.length) + '</div></div></div>' + (report.exact.length ? report.exact.map(d => '<div class="tile" style="margin-top:8px;border-color:rgba(220,38,38,.4)">' + Utils.escapeHtml(d.a.operationCode) + ' ↔ ' + Utils.escapeHtml(d.b.operationCode) + '</div>').join('') : '<div class="empty" style="margin-top:20px"><div class="empty-ico">✅</div>Точных дубликатов нет</div>'));
 }
 
