@@ -1003,7 +1003,7 @@ const BASE_NORMS = N_RAW.map(r => ({
   function setLastImport(d){Storage.set('import_last',d);}
   function clearLastImport(){Storage.remove('import_last');}
   function generateTemplateCSV(){ const headers=NORM_COLUMNS.map(c=>c.label); const example=['ДСП-НОВОЕ-001','Замена детали','ДСП','Механическое','Электродуговая печь','ДСП-100','1201-001-001-001-001-001-100','42','3','4-5 разряд','3','Федеральные нормативы','ФЕРп-2001','ФЕР','0.85','Средний ремонт','Ключи, Лебёдка','Наряд-допуск, СИЗ','Описание']; return Utils.toCSV([headers,example]); }
-  ESP.Plugins.register('import-pro',{version:'2.0',NORM_COLUMNS,EQUIP_COLUMNS,detectFormat,parseXLSX,parseCSVRaw,parseJSONRaw,parseWithProfile,autoMap,validateRow,upsertNorms,upsertEquipment,getProfiles,saveProfile,deleteProfile,getHistory,pushHistory,getLastImport,setLastImport,clearLastImport,generateTemplateCSV}
+    ESP.Plugins.register('import-pro',{version:'2.0',NORM_COLUMNS,EQUIP_COLUMNS,detectFormat,parseXLSX,parseCSVRaw,parseJSONRaw,parseWithProfile,autoMap,validateRow,upsertNorms,upsertEquipment,getProfiles,saveProfile,deleteProfile,getHistory,pushHistory,getLastImport,setLastImport,clearLastImport,generateTemplateCSV});
 })();
 
 (function(){ 'use strict';
