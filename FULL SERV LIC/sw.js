@@ -1,4 +1,4 @@
-const CACHE_NAME = 'esp-cache-v8.8
+const CACHE_NAME = 'esp-cache-v8.9
 '; // Обязательно поднимите версию!
 const URLS_TO_CACHE = [
   './', './index.html', './esp-full.html', './esp-lite.html',
