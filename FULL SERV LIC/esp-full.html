@@ -33,9 +33,8 @@ function loadCDN(urls, flagName){
 }
 </script>
 <script>loadCDN(['https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js','https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js','https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'], '__XLSX_FAILED');</script>
-<!-- Локальные библиотеки для PDF (работают всегда) -->
-<script src="./jspdf.umd.min.js"></script>
-<script src="./jspdf.plugin.autotable.min.js"></script>
+<script>loadCDN(['https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js','https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js'], '__JSPDF_FAILED');</script>
+<script>loadCDN(['https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js','https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js','https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js'], '__AUTOTABLE_FAILED');</script>
 <script>loadCDN(['https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js','https://unpkg.com/docx@8.5.0/build/index.umd.js'], '__DOCX_FAILED');</script>
 <style>
 :root{--bg:#111827;--panel:#1f2937;--border:#374151;--border-hi:#4b5563;--text:#e5e7eb;--muted:#9ca3af;--dim:#6b7280;--accent:#2563eb;--green:#16a34a;--red:#dc2626;--yellow:#eab308;--purple:#a855f7;--cyan:#06b6d4;--orange:#ea580c}
@@ -988,7 +987,7 @@ const BASE_NORMS = N_RAW.map(r => ({
   function detectFormat(t,f){ if(f){const e=f.toLowerCase().split('.').pop(); if(e==='xlsx'||e==='xls')return 'xlsx'; if(e==='json')return 'json'; if(e==='csv'||e==='txt')return 'csv';} return 'unknown'; }
   function parseXLSX(file){ return new Promise((resolve,reject)=>{ if(typeof XLSX==='undefined'){reject(new Error('SheetJS не загружен')); return;} const reader=new FileReader(); reader.onload=(e)=>{ try{ const data=new Uint8Array(e.target.result); const wb=XLSX.read(data,{type:'array'}); const sheet=wb.Sheets[wb.SheetNames[0]]; const rows=XLSX.utils.sheet_to_json(sheet,{header:1,defval:''}); if(rows.length<2){resolve({ok:false,msg:'Пустой'});return;} resolve({ok:true,headers:rows[0].map(h=>String(h||'').trim()),rows:rows.slice(1).filter(r=>r.some(c=>String(c||'').trim()))}); }catch(err){reject(new Error('Ошибка XLSX: '+err.message));} }; reader.onerror=()=>reject(new Error('Не прочитать')); reader.readAsArrayBuffer(file); }); }
   function parseCSVRaw(text){ const rows=Utils.parseCSV(text); if(rows.length<2)return {ok:false,msg:'CSV короткий'}; return {ok:true,headers:rows[0].map(h=>String(h||'').trim()),rows:rows.slice(1)}; }
-  function parseJSONRaw(text){      let data;      try{ data = JSON.parse(text); }catch(e){ return {ok:false, msg:'Ошибка JSON: ' + e.message}; }           // Поддерживаем как чистый массив, так и объекты с ключами     let arr = Array.isArray(data) ? data : (data.custom || data.norms || data.equipment || data.customEquip || null);           if(!arr) return {ok:false, msg:'В файле не найден массив данных'};      if(!arr.length) return {ok:false, msg:'Файл прочитан, но массив пуст'};           // Собираем все уникальные ключи     const headers = [...new Set(arr.flatMap(Object.keys))];           const rows = arr.map(o => headers.map(k => {       const v = o[k];        if(v == null) return '';        if(Array.isArray(v)) return v.join(',');        if(typeof v === 'object') return JSON.stringify(v);        return v;     }));      return {ok:true, headers, rows};    }
+  function parseJSONRaw(text){ let data; try{ data=JSON.parse(text); }catch(e){ return {ok:false,msg:'Невалидный JSON'}; } let arr=Array.isArray(data)?data:(data.custom||data.norms||data.equipment||data.customEquip||null); if(!arr||!arr.length)return {ok:false,msg:'Массив пустой'}; const headers=[...new Set(arr.flatMap(Object.keys))]; const rows=arr.map(o=>headers.map(k=>{const v=o[k]; if(v==null)return ''; if(Array.isArray(v))return v.join(','); if(typeof v==='object')return JSON.stringify(v); return v;})); return {ok:true,headers,rows}; }
   function autoMap(headers,columns){ const m={}; columns.forEach(col=>{ const syns=SYNONYMS[col.key]||[col.key.toLowerCase(),col.label.toLowerCase()]; for(let i=0;i<headers.length;i++){const h=headers[i].toLowerCase().trim(); if(syns.includes(h)){m[col.key]=i;return;}} for(let i=0;i<headers.length;i++){const h=headers[i].toLowerCase().trim(); if(syns.some(s=>h.includes(s)||s.includes(h))){m[col.key]=i;return;}} }); return m; }
   function validateRow(obj,columns){ const errors=[];const normalized={}; columns.forEach(col=>{ let val=obj[col.key]; if(col.type==='number'){ if(val===''||val==null){ if(col.required)errors.push(col.label+' обязателен'); else if(col.default!=null)normalized[col.key]=col.default; return;} const n=parseFloat(String(val).replace(',','.')); if(isNaN(n)){errors.push(col.label+': не число');return;} normalized[col.key]=n; } else if(col.type==='int'){ if(val===''||val==null){ if(col.required)errors.push(col.label+' обязателен'); else if(col.default!=null)normalized[col.key]=col.default; return;} const n=parseInt(String(val).trim()); if(isNaN(n)){errors.push(col.label+': не целое');return;} normalized[col.key]=n; } else if(col.dict){ const dict=ESP.DICT[col.dict];const rev={};Object.entries(dict).forEach(([k,v])=>{rev[v.toLowerCase()]=k;rev[k.toLowerCase()]=k;}); const raw=String(val||'').trim().toLowerCase(); if(!raw){if(col.required)errors.push(col.label+' обязателен'); else if(col.default!=null)normalized[col.key]=col.default;return;} const code=rev[raw]; if(!code){errors.push(col.label+': "'+val+'"');return;} normalized[col.key]=code; } else if(col.validate==='tm'){ const raw=String(val||'').trim(); if(!raw){normalized[col.key]='';return;} const r=TM.validate(raw); if(!r.ok){errors.push('ТМ: '+r.msg);return;} normalized[col.key]=raw; } else { const raw=String(val||'').trim(); if(!raw){if(col.required)errors.push(col.label+' обязателен'); else normalized[col.key]='';return;} if(col.key==='toolsRequired'||col.key==='safetyRequirements')normalized[col.key]=raw.split(',').map(s=>s.trim()).filter(Boolean); else normalized[col.key]=raw; } }); return {errors,normalized}; }
   function parseWithProfile(parsed,columns,mapping){ const valid=[];const errorRows=[]; parsed.rows.forEach((row,idx)=>{ const obj={}; columns.forEach(col=>{const i=mapping[col.key]; if(i!==undefined&&i>=0)obj[col.key]=row[i];}); const r=validateRow(obj,columns); if(r.errors.length)errorRows.push({row:idx+2,errors:r.errors,raw:obj}); else valid.push(r.normalized); }); return {valid,errorRows}; }
@@ -1073,7 +1072,7 @@ const BASE_NORMS = N_RAW.map(r => ({
   const { Utils, Storage, Auth } = ESP;
   const ROBOTO_CDN={regular:'https://cdn.jsdelivr.net/gh/googlefonts/roboto@main/src/hinted/Roboto-Regular.ttf',bold:'https://cdn.jsdelivr.net/gh/googlefonts/roboto@main/src/hinted/Roboto-Bold.ttf'};
   let fontRegistered=false, fontRegistrationPromise=null, FONT_CACHE={regular:null,bold:null};
-  function isAvailable(){   if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) return false;   if (window.__JSPDF_FAILED || window.__AUTOTABLE_FAILED) return false;   try {     const testDoc = new window.jspdf.jsPDF();     return typeof testDoc.autoTable === 'function';   } catch(e) { return false; } }
+  function isAvailable(){return typeof window.jspdf!=='undefined'&&window.jspdf.jsPDF&&!window.__JSPDF_FAILED&&!window.__AUTOTABLE_FAILED;}
   function ab2b64(buffer){const bytes=new Uint8Array(buffer); let binary=''; const chunk=0x8000; for(let i=0;i<bytes.length;i+=chunk){binary+=String.fromCharCode.apply(null,bytes.subarray(i,i+chunk));} return btoa(binary);}
   async function loadFontFromCDN(url){ try{ const ctrl=new AbortController(); const t=setTimeout(()=>ctrl.abort(),8000); const r=await fetch(url,{signal:ctrl.signal}); clearTimeout(t); if(!r.ok)throw new Error('HTTP '+r.status); const ab=await r.arrayBuffer(); return ab2b64(ab); }catch(e){ return null; } }
   function registerFontInDoc(doc,b64r,b64b){ try{ if(b64r){doc.addFileToVFS('Roboto-Regular.ttf',b64r);doc.addFont('Roboto-Regular.ttf','Roboto','normal');} if(b64b){doc.addFileToVFS('Roboto-Bold.ttf',b64b);doc.addFont('Roboto-Bold.ttf','Roboto','bold');} return true; }catch(e){return false;} }
@@ -1298,18 +1297,10 @@ function attachNormEvents(){
   ['f-sec|fSection','f-cat|fCat','f-rep|fRep'].forEach(p => { const [id,key] = p.split('|'); const el = document.getElementById(id); if(el) el.onchange = e => { state[key] = e.target.value; refreshNormsList(); }; });
   bindNormAddButtons();
   const pdfBtn = document.getElementById('normsExportPDF');
-  if(pdfBtn) pdfBtn.onclick = async () => {
+  if(pdfBtn) pdfBtn.onclick = () => {
     const filtered = getFiltered();
     if(!filtered.length){ showToast('Нет данных', 'warn'); return; }
-    try {
-      if (!Plugins.has('pdf-export')) { showToast('Плагин PDF не загружен', 'err', 5000); return; }
-      const r = await Plugins.call('pdf-export', 'exportNormsRegistryPDF', filtered);
-      if(r && r.ok) showToast('PDF: ' + r.count + ' записей', 'ok', 4000);
-      else showToast('Ошибка PDF: ' + (r?.msg || 'неизвестно'), 'err', 5000);
-    } catch(e) {
-      console.error('[ESP] PDF export error:', e);
-      showToast('Ошибка PDF: ' + e.message, 'err', 5000);
-    }
+    Plugins.call('pdf-export','exportNormsRegistryPDF', filtered).then(r => { if(r && r.ok) showToast('PDF: ' + r.count + ' записей', 'ok', 4000); else showToast('Ошибка: ' + (r?.msg||''), 'err'); });
   };
   const docxBtn = document.getElementById('normsExportDOCX');
   if(docxBtn) docxBtn.onclick = async () => {
@@ -1415,7 +1406,7 @@ function tabCards(){
   appendMsg('<div class="bubble-title">📄 Технологические карты</div><div class="bubble-sub">Сохранено: <span class="hl">' + state.cards.length + '</span></div>' + (!state.cards.length ? '<div class="empty"><div class="empty-ico">📄</div>Создайте первую карту в калькуляторе</div>' : state.cards.map(c => '<div class="tech-card"><div class="tech-card-head"><div style="flex:1;min-width:200px"><div class="tech-card-num">' + Utils.escapeHtml(c.cardNumber) + '</div><div class="tech-card-title">' + Utils.escapeHtml(c.equipmentName) + '</div><div class="tech-card-meta">' + REPAIR_NAMES[c.repairType] + ' • ' + c.operations.length + ' операций • ' + Utils.formatDate(c.createdAt) + (c.tm?' • ТМ: '+c.tm:'') + '</div></div><div class="norm-row-stats"><div class="norm-stat"><div class="norm-stat-v">' + c.totalHours + '</div><div class="norm-stat-l">чел-час</div></div><div class="norm-stat"><div class="norm-stat-v" style="color:#fdba74">' + c.calendarDays + '</div><div class="norm-stat-l">дней</div></div></div></div><div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap"><button class="btn btn-ghost btn-xs" type="button" data-view="' + c.id + '">👁 Просмотр</button><button class="btn btn-success btn-xs" type="button" data-print="' + c.id + '">🖨 Печать</button><button class="btn btn-danger btn-xs" type="button" data-pdf="' + c.id + '">📕 PDF</button><button class="btn btn-ghost btn-xs" type="button" data-txt="' + c.id + '">📥 TXT</button><button class="btn btn-danger btn-xs" type="button" data-del="' + c.id + '">🗑 Удалить</button></div></div>').join(''))).then(() => {
     document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => showViewCard(state.cards.find(c => c.id === b.dataset.view)));
     document.querySelectorAll('[data-print]').forEach(b => b.onclick = () => printCard(state.cards.find(c => c.id === b.dataset.print)));
-    document.querySelectorAll('[data-pdf]').forEach(b => b.onclick = async () => {   const card = state.cards.find(c => c.id === b.dataset.pdf);   if(!card){ showToast('Карта не найдена', 'err'); return; }   try {     if (!Plugins.has('pdf-export')) { showToast('Плагин PDF не загружен', 'err', 5000); return; }     const r = await Plugins.call('pdf-export', 'exportTechCardPDF', card);     if(r && r.ok) showToast('PDF: ' + r.filename, 'ok', 4000);     else showToast('Ошибка PDF: ' + (r?.msg || 'неизвестно'), 'err', 5000);   } catch(e) {     console.error('[ESP] PDF card error:', e);     showToast('Ошибка PDF: ' + e.message, 'err', 5000);   } });
+    document.querySelectorAll('[data-pdf]').forEach(b => b.onclick = () => { const card = state.cards.find(c => c.id === b.dataset.pdf); Plugins.call('pdf-export','exportTechCardPDF', card).then(r => { if(r && r.ok) showToast('PDF: ' + r.filename, 'ok', 4000); else showToast('Ошибка: ' + (r?.msg||''), 'err'); }); });
     document.querySelectorAll('[data-txt]').forEach(b => b.onclick = () => { const c = state.cards.find(x => x.id === b.dataset.txt); Utils.download('ТК_' + c.cardNumber + '.txt', generateCardText(c), 'text/plain'); });
     document.querySelectorAll('[data-del]').forEach(b => b.onclick = () => { if(confirm('Удалить техкарту?')){ state.cards = state.cards.filter(c => c.id !== b.dataset.del); saveCards(); renderChat(); } });
   });
@@ -1745,32 +1736,11 @@ function renderImportProTab(tab){
   document.getElementById('tmplBtn').onclick = () => { const csv = Plugins.call('import-pro','generateTemplateCSV'); Utils.download('шаблон.csv', '\uFEFF'+csv, 'text/csv'); };
 }
 function handleFiles(file, isEq){
-    try {
-      const fmt = Plugins.call('import-pro', 'detectFormat', null, file.name);
-      if(fmt === 'unknown'){ alert('Формат не поддерживается. Ожидается XLSX, CSV или JSON.'); return; }
-      
-      if(fmt === 'xlsx'){ 
-        Plugins.call('import-pro','parseXLSX', file)
-          .then(parsed => { if(!parsed || !parsed.ok){ alert(parsed?.msg || 'Ошибка XLSX'); return; } processParsed(parsed, isEq, file.name); })
-          .catch(err => alert('Ошибка чтения XLSX: ' + err.message)); 
-      }
-      else { 
-        const reader = new FileReader(); 
-        reader.onload = () => { 
-          try {
-            const parsed = fmt === 'json' ? Plugins.call('import-pro','parseJSONRaw', reader.result) : Plugins.call('import-pro','parseCSVRaw', reader.result); 
-            if(!parsed || !parsed.ok){ alert(parsed?.msg || 'Ошибка парсинга файла'); return; } 
-            processParsed(parsed, isEq, file.name); 
-          } catch(e) {
-            alert('Ошибка при чтении файла: ' + e.message);
-          }
-        }; 
-        reader.readAsText(file); 
-      }
-    } catch(e) {
-      alert('Системная ошибка: ' + e.message);
-    }
-  }
+  const fmt = Plugins.call('import-pro','detectFormat', null, file.name);
+  if(fmt === 'unknown'){ alert('Формат не поддерживается'); return; }
+  if(fmt === 'xlsx'){ Plugins.call('import-pro','parseXLSX', file).then(parsed => { if(!parsed.ok){ alert(parsed.msg); return; } processParsed(parsed, isEq, file.name); }).catch(err => alert(err.message)); }
+  else { const reader = new FileReader(); reader.onload = () => { const parsed = fmt === 'json' ? Plugins.call('import-pro','parseJSONRaw', reader.result) : Plugins.call('import-pro','parseCSVRaw', reader.result); if(!parsed.ok){ alert(parsed.msg); return; } processParsed(parsed, isEq, file.name); }; reader.readAsText(file); }
+}
 function processParsed(parsed, isEq, filename){ state._importParsed = parsed; state._importIsEquip = isEq; state._importFilename = filename; renderPreview(parsed, isEq); }
 function renderPreview(parsed, isEq){
   const area = document.getElementById('importPreviewArea'); if(!area) return;
@@ -2203,7 +2173,7 @@ function showViewCard(card){
   document.body.appendChild(m);
   m.querySelectorAll('[data-close]').forEach(b => b.onclick = () => m.remove());
   m.querySelector('#cardPrint').onclick = () => printCard(card);
-   m.querySelector('#cardPDF').onclick = async () => {     try {       if (!Plugins.has('pdf-export')) { showToast('Плагин PDF не загружен', 'err', 5000); return; }       const r = await Plugins.call('pdf-export', 'exportTechCardPDF', card);       if(r && r.ok) showToast('PDF: ' + r.filename, 'ok');       else showToast('Ошибка PDF: ' + (r?.msg || 'неизвестно'), 'err', 5000);     } catch(e) {       console.error('[ESP] PDF card error:', e);       showToast('Ошибка PDF: ' + e.message, 'err', 5000);     }   };
+  m.querySelector('#cardPDF').onclick = () => { Plugins.call('pdf-export','exportTechCardPDF', card).then(r => { if(r && r.ok) showToast('PDF: ' + r.filename, 'ok'); else showToast('Ошибка: ' + (r?.msg||''), 'err'); }); };
   m.querySelector('#cardTxt').onclick = () => Utils.download('ТК_' + card.cardNumber + '.txt', generateCardText(card), 'text/plain');
 }
 function generateCardText(card){
