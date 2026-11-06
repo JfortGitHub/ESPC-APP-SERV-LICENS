@@ -1745,11 +1745,32 @@ function renderImportProTab(tab){
   document.getElementById('tmplBtn').onclick = () => { const csv = Plugins.call('import-pro','generateTemplateCSV'); Utils.download('шаблон.csv', '\uFEFF'+csv, 'text/csv'); };
 }
 function handleFiles(file, isEq){
-  const fmt = Plugins.call('import-pro','detectFormat', null, file.name);
-  if(fmt === 'unknown'){ alert('Формат не поддерживается'); return; }
-  if(fmt === 'xlsx'){ Plugins.call('import-pro','parseXLSX', file).then(parsed => { if(!parsed.ok){ alert(parsed.msg); return; } processParsed(parsed, isEq, file.name); }).catch(err => alert(err.message)); }
-  else { const reader = new FileReader(); reader.onload = () => { const parsed = fmt === 'json' ? Plugins.call('import-pro','parseJSONRaw', reader.result) : Plugins.call('import-pro','parseCSVRaw', reader.result); if(!parsed.ok){ alert(parsed.msg); return; } processParsed(parsed, isEq, file.name); }; reader.readAsText(file); }
-}
+    try {
+      const fmt = Plugins.call('import-pro', 'detectFormat', null, file.name);
+      if(fmt === 'unknown'){ alert('Формат не поддерживается. Ожидается XLSX, CSV или JSON.'); return; }
+      
+      if(fmt === 'xlsx'){ 
+        Plugins.call('import-pro','parseXLSX', file)
+          .then(parsed => { if(!parsed || !parsed.ok){ alert(parsed?.msg || 'Ошибка XLSX'); return; } processParsed(parsed, isEq, file.name); })
+          .catch(err => alert('Ошибка чтения XLSX: ' + err.message)); 
+      }
+      else { 
+        const reader = new FileReader(); 
+        reader.onload = () => { 
+          try {
+            const parsed = fmt === 'json' ? Plugins.call('import-pro','parseJSONRaw', reader.result) : Plugins.call('import-pro','parseCSVRaw', reader.result); 
+            if(!parsed || !parsed.ok){ alert(parsed?.msg || 'Ошибка парсинга файла'); return; } 
+            processParsed(parsed, isEq, file.name); 
+          } catch(e) {
+            alert('Ошибка при чтении файла: ' + e.message);
+          }
+        }; 
+        reader.readAsText(file); 
+      }
+    } catch(e) {
+      alert('Системная ошибка: ' + e.message);
+    }
+  }
 function processParsed(parsed, isEq, filename){ state._importParsed = parsed; state._importIsEquip = isEq; state._importFilename = filename; renderPreview(parsed, isEq); }
 function renderPreview(parsed, isEq){
   const area = document.getElementById('importPreviewArea'); if(!area) return;
