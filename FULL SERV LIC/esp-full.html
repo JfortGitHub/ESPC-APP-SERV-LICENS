@@ -2260,22 +2260,22 @@ const TABS = {
 };
 
 /* ═══ ИНИЦИАЛИЗАЦИЯ ═══ */
-ESP_GUARD.init();
-ESP.init();
-APP.setVersion('full');
+try { ESP_GUARD.init(); } catch(e) {}
+try { ESP.init(); } catch(e) {}
+try { APP.setVersion('full'); } catch(e) {}
 
-try{
+try {
   const _baseline = ESP_GUARD.integrityHash();
   ESP_GUARD.startIntegrityCheck(_baseline, () => { console.warn('[ESP] Обнаружено изменение ядра'); });
   ESP_GUARD.startAntiDebug(
     () => console.info('%cESP Full V5.0 · ' + ESP_GUARD.licenseId + ' · WM: ' + ESP_GUARD.watermark, 'color:#fb923c;font-weight:bold'),
     null
   );
-}catch(e){}
+} catch(e) {}
 
-try{
+try {
   document.querySelector('.sidebar-footer').innerHTML = 'ЭСПЦ © 2024–2026 · V5.0 <span class="ver">Full</span> · <span style="opacity:.55;font-family:monospace;font-size:9.5px">' + ESP_GUARD.watermark + '</span>';
-}catch(e){}
+} catch(e) {}
 
 document.getElementById('loginForm').onsubmit = async e => {
   e.preventDefault();
@@ -2290,8 +2290,13 @@ document.getElementById('loginForm').onsubmit = async e => {
     setTimeout(() => err.classList.remove('show'), 2500);
   }
 };
+
 document.querySelectorAll('.login-account').forEach(el => {
-  el.onclick = () => { document.getElementById('loginInput').value = el.dataset.login; document.getElementById('passwordInput').value = el.dataset.pwd; document.getElementById('loginError').classList.remove('show'); };
+  el.onclick = () => { 
+    document.getElementById('loginInput').value = el.dataset.login; 
+    document.getElementById('passwordInput').value = el.dataset.pwd; 
+    document.getElementById('loginError').classList.remove('show'); 
+  };
 });
 
 (async () => {
@@ -2300,7 +2305,7 @@ document.querySelectorAll('.login-account').forEach(el => {
   else showLogin();
 })();
 
-// ═══ АВТОСОХРАНЕНИЕ КАЛЬКУЛЯТОРА (каждые 30 сек) ═══
+// ═══ АВТОСОХРАНЕНИЕ КАЛЬКУЛЯТОРА ═══
 setInterval(() => {
   if (state.calc && state.calc.length >= 0) {
     Storage.set('autosave_calc', state.calc);
